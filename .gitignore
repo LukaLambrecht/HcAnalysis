@@ -3,14 +3,3 @@
 
 # ingore compiled python code
 **.pyc
-
-# ignore CMSSW other than src
-CMSSW_14_0_0/.SCRAM/
-CMSSW_14_0_0/cfipython/
-CMSSW_14_0_0/config/
-CMSSW_14_0_0/external/
-CMSSW_14_0_0/lib/
-CMSSW_14_0_0/python/
-CMSSW_14_0_0/test/
-CMSSW_14_0_0/tmp/
-CMSSW_14_0_0/src/HcAnalysis/HcAnalysis/test/

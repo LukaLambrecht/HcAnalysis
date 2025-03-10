@@ -17,7 +17,7 @@ process.load('Configuration.StandardSequences.Reconstruction_cff')
 # set input file and number of events to process
 # (note: use -1 to process all events in the input file)
 inputfile = os.path.abspath(sys.argv[1])
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(100) )
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(500) )
 process.source = cms.Source("PoolSource",
         fileNames = cms.untracked.vstring(
         'file:{}'.format(inputfile)

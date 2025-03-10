@@ -14,6 +14,7 @@ Ds -> phi pi+ -> K+ K- pi+
 // system include files
 #include <memory>
 #include <unordered_map>
+#include <Math/Vector4D.h>
 #include <Math/SVector.h> // root high-performance vector class
 #include <Math/SMatrix.h> // root high-performance matrix class
 #include "TMatrixDSym.h" // for fixTrackCovariance
@@ -68,11 +69,20 @@ class DsMesonAnalyzer {
     static constexpr double pimass2 = pimass*pimass;
     static constexpr double kmass = 0.493677;
     static constexpr double kmass2 = kmass*kmass;
+    static constexpr double phimass = 1.019461;
+    static constexpr double dsmass = 1.96847;
 
     // ROOT tree variable declarations
-    static const unsigned nDsMesons_max = 50;
-    unsigned _nDsMesons = 0;    
-    double _DsMesonInvMass[nDsMesons_max];
+    static const unsigned nDsMeson_max = 50;
+    unsigned _nDsMeson = 0;
+    double _DsMeson_mass[nDsMeson_max];
+    double _DsMeson_pt[nDsMeson_max];
+    double _DsMeson_eta[nDsMeson_max];
+    double _DsMeson_phi[nDsMeson_max];
+    double _DsMeson_PhiMeson_mass[nDsMeson_max];
+    double _DsMeson_PhiMeson_pt[nDsMeson_max];
+    double _DsMeson_PhiMeson_eta[nDsMeson_max];
+    double _DsMeson_PhiMeson_phi[nDsMeson_max];
 
   public:
     DsMesonAnalyzer(const edm::ParameterSet& iConfig, HcAnalysis* vars);
