@@ -1,0 +1,4 @@
+<library name="HcAnalysis_plugins" file="*.cc">
+	<flags EDM_PLUGIN="1"/>
+	<use name="HcAnalysis/HcAnalysis"/>
+</library>
