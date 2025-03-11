@@ -20,8 +20,8 @@ HiggsAnalyzer::~HiggsAnalyzer(){
 void HiggsAnalyzer::beginJob(TTree* outputTree){
     // initialize branches in the output tree
 
-    outputTree->Branch("_nHiggs", &_nHiggs, "_nHiggs/i");
-    outputTree->Branch("_HiggsInvMass", &_HiggsInvMass, "_HiggsInvMass[_nHiggs]/D");
+    outputTree->Branch("nHiggs", &_nHiggs, "nHiggs/i");
+    outputTree->Branch("HiggsInvMass", &_HiggsInvMass, "HiggsInvMass[nHiggs]/D");
 }
 
 // analyze (main method) //

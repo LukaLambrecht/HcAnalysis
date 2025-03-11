@@ -48,6 +48,7 @@
 
 // specificd analyzers
 #include "HcAnalysis/HcAnalysis/interface/DsMesonAnalyzer.h"
+#include "HcAnalysis/HcAnalysis/interface/DsMesonGenAnalyzer.h"
 #include "HcAnalysis/HcAnalysis/interface/HiggsAnalyzer.h"
 
 //
@@ -56,6 +57,7 @@
 
 // declare specific analyzers
 class DsMesonAnalyzer;
+class DsMesonGenAnalyzer;
 class HiggsAnalyzer;
 
 // define total analyzer
@@ -63,6 +65,7 @@ class HcAnalysis : public edm::one::EDAnalyzer<edm::one::WatchLuminosityBlocks, 
 
   // define specific analyzers as friends
   friend DsMesonAnalyzer;
+  friend DsMesonGenAnalyzer;
   friend HiggsAnalyzer;
 
   public:
@@ -86,11 +89,14 @@ class HcAnalysis : public edm::one::EDAnalyzer<edm::one::WatchLuminosityBlocks, 
     virtual void endJob() override {};
 
     // tokens
+    edm::EDGetTokenT<reco::GenParticleCollection> prunedGenParticlesToken;
+    edm::EDGetTokenT<reco::GenParticleCollection> packedGenParticlesToken;
     edm::EDGetTokenT<pat::PackedCandidateCollection> packedPFCandidatesToken;
     edm::EDGetTokenT<pat::PackedCandidateCollection> lostTracksToken;
 
     // specific analyzers
     DsMesonAnalyzer* dsMesonAnalyzer;
+    DsMesonGenAnalyzer* dsMesonGenAnalyzer;
     HiggsAnalyzer* higgsAnalyzer;
 
     // output file and tree

@@ -17,7 +17,7 @@ process.load('Configuration.StandardSequences.Reconstruction_cff')
 # set input file and number of events to process
 # (note: use -1 to process all events in the input file)
 inputfile = os.path.abspath(sys.argv[1])
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(500) )
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
 process.source = cms.Source("PoolSource",
         fileNames = cms.untracked.vstring(
         'file:{}'.format(inputfile)
@@ -27,6 +27,8 @@ process.source = cms.Source("PoolSource",
 # define the processing steps and objects to use
 process.analyzer = cms.EDAnalyzer('HcAnalysis',
   primaryVertices = cms.untracked.InputTag('offlineSlimmedPrimaryVertices'),
+  prunedGenParticles = cms.untracked.InputTag("prunedGenParticles"),
+  packedGenParticles = cms.untracked.InputTag("packedGenParticles"),
   packedPFCandidates = cms.untracked.InputTag('packedPFCandidates'),
   lostTracks = cms.untracked.InputTag('lostTracks')
 )

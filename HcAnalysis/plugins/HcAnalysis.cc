@@ -28,6 +28,10 @@ HcAnalysis::HcAnalysis(const edm::ParameterSet& iConfig):
   // read tokens
   // note: the tokens must be initialized in the header file,
   //       and their value must be set in the config file.
+  prunedGenParticlesToken(consumes<reco::GenParticleCollection>(
+    iConfig.getUntrackedParameter<edm::InputTag>("prunedGenParticles"))),
+  packedGenParticlesToken(consumes<reco::GenParticleCollection>(
+    iConfig.getUntrackedParameter<edm::InputTag>("packedGenParticles"))),
   packedPFCandidatesToken(consumes<pat::PackedCandidateCollection>(
     iConfig.getUntrackedParameter<edm::InputTag>("packedPFCandidates"))),
   lostTracksToken(consumes<pat::PackedCandidateCollection>(
@@ -35,6 +39,7 @@ HcAnalysis::HcAnalysis(const edm::ParameterSet& iConfig):
 {
   // initialize specific analyzers
   dsMesonAnalyzer = new DsMesonAnalyzer(iConfig, this);
+  dsMesonGenAnalyzer = new DsMesonGenAnalyzer(iConfig, this);
   higgsAnalyzer = new HiggsAnalyzer(iConfig, this);
 }
 
@@ -44,6 +49,7 @@ HcAnalysis::~HcAnalysis() {
 
   // delete specific analyzers
   delete dsMesonAnalyzer;
+  delete dsMesonGenAnalyzer;
   delete higgsAnalyzer;
 }
 
@@ -59,6 +65,7 @@ void HcAnalysis::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup
 
   // run specific analyzers
   dsMesonAnalyzer->analyze(iEvent);
+  dsMesonGenAnalyzer->analyze(iEvent); // todo: disable for data
   higgsAnalyzer->analyze(iEvent);
 
   // get objects from tokens
@@ -82,6 +89,7 @@ void HcAnalysis::beginJob() {
 
   // do begin job for specific analyzers
   dsMesonAnalyzer->beginJob(outputTree);
+  dsMesonGenAnalyzer->beginJob(outputTree);
   higgsAnalyzer->beginJob(outputTree);
 
   // initialize run, lumiblock and event number
