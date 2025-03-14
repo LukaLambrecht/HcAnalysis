@@ -45,6 +45,7 @@ class DsMesonGenAnalyzer {
 
     int _nGenDsMeson = 0;
     int _nGenDsMesonToKKPi = 0;
+    int _genDsMesonDecayType = 0;
 
   public:
     DsMesonGenAnalyzer(const edm::ParameterSet& iConfig, HcAnalysis* vars);
@@ -53,7 +54,8 @@ class DsMesonGenAnalyzer {
     void beginJob(TTree*);
     void analyze(const edm::Event&);
 
-    static std::map< std::string, const reco::GenParticle* > find_Ds_To_PhiPi_To_KKPi(
+    static int find_Ds_decay_type(const std::vector<reco::GenParticle>&);
+    static std::map< std::string, const reco::GenParticle* > find_Ds_to_PhiPi_to_KKPi(
       const std::vector<reco::GenParticle>&);
 };
 

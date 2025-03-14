@@ -34,6 +34,9 @@ Custom analyzer class for investigating gen-level Ds meson decays.
 // dataformats include files
 #include "DataFormats/Math/interface/LorentzVector.h"
 
+// include other analyzers and tools
+#include "HcAnalysis/HcAnalysis/interface/GenTools.h"
+
 
 class HcAnalysis;
 

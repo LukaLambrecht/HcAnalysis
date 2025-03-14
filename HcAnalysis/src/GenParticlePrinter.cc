@@ -35,9 +35,10 @@ void GenParticlePrinter::analyze(const edm::Event& iEvent){
         if(!p.isLastCopy()) continue;
         int pdgid = p.pdgId();
         if(std::abs(pdgid) < 400 || std::abs(pdgid) > 500) continue;
-        std::cout << "Particle " << p.pdgId() << std::endl;
+        int mompdgid = GenTools::getMotherPdgId(p, *genParticles);
+        std::cout << "Particle " << pdgid << std::endl;
         std::cout << "  kinematics: " << p.pt() << " " << p.eta() << " " << p.phi() << std::endl;
         std::cout << "  mass: " << p.mass() << std::endl;
-        std::cout << "  isLastCopy: " << p.isLastCopy() << std::endl;
+        std::cout << "  mom pdg id: " << mompdgid << std::endl;
     }
 }
