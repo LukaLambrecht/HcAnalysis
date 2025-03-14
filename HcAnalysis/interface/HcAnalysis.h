@@ -49,6 +49,7 @@
 // specificd analyzers
 #include "HcAnalysis/HcAnalysis/interface/DsMesonAnalyzer.h"
 #include "HcAnalysis/HcAnalysis/interface/DsMesonGenAnalyzer.h"
+#include "HcAnalysis/HcAnalysis/interface/GenParticlePrinter.h"
 #include "HcAnalysis/HcAnalysis/interface/HiggsAnalyzer.h"
 
 //
@@ -58,6 +59,7 @@
 // declare specific analyzers
 class DsMesonAnalyzer;
 class DsMesonGenAnalyzer;
+class GenParticlePrinter;
 class HiggsAnalyzer;
 
 // define total analyzer
@@ -66,6 +68,7 @@ class HcAnalysis : public edm::one::EDAnalyzer<edm::one::WatchLuminosityBlocks, 
   // define specific analyzers as friends
   friend DsMesonAnalyzer;
   friend DsMesonGenAnalyzer;
+  friend GenParticlePrinter;
   friend HiggsAnalyzer;
 
   public:
@@ -97,6 +100,7 @@ class HcAnalysis : public edm::one::EDAnalyzer<edm::one::WatchLuminosityBlocks, 
     // specific analyzers
     DsMesonAnalyzer* dsMesonAnalyzer;
     DsMesonGenAnalyzer* dsMesonGenAnalyzer;
+    GenParticlePrinter* genParticlePrinter;
     HiggsAnalyzer* higgsAnalyzer;
 
     // output file and tree

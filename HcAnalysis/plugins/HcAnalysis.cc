@@ -40,6 +40,7 @@ HcAnalysis::HcAnalysis(const edm::ParameterSet& iConfig):
   // initialize specific analyzers
   dsMesonAnalyzer = new DsMesonAnalyzer(iConfig, this);
   dsMesonGenAnalyzer = new DsMesonGenAnalyzer(iConfig, this);
+  genParticlePrinter = new GenParticlePrinter(iConfig, this);
   higgsAnalyzer = new HiggsAnalyzer(iConfig, this);
 }
 
@@ -50,6 +51,7 @@ HcAnalysis::~HcAnalysis() {
   // delete specific analyzers
   delete dsMesonAnalyzer;
   delete dsMesonGenAnalyzer;
+  delete genParticlePrinter;
   delete higgsAnalyzer;
 }
 
@@ -66,13 +68,8 @@ void HcAnalysis::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup
   // run specific analyzers
   dsMesonAnalyzer->analyze(iEvent);
   dsMesonGenAnalyzer->analyze(iEvent); // todo: disable for data
+  //genParticlePrinter->analyze(iEvent); // todo: disable for data and production
   higgsAnalyzer->analyze(iEvent);
-
-  // get objects from tokens
-  //edm::Handle<pat::PackedCandidateCollection> packedPFCandidates;
-  //iEvent.getByToken(packedPFCandidatesToken, packedPFCandidates);
-  //edm::Handle<pat::PackedCandidateCollection> lostTracks;
-  //iEvent.getByToken(lostTracksToken, lostTracks);
 
   // fill output tree
   outputTree->Fill();
@@ -90,6 +87,7 @@ void HcAnalysis::beginJob() {
   // do begin job for specific analyzers
   dsMesonAnalyzer->beginJob(outputTree);
   dsMesonGenAnalyzer->beginJob(outputTree);
+  genParticlePrinter->beginJob(outputTree);
   higgsAnalyzer->beginJob(outputTree);
 
   // initialize run, lumiblock and event number
