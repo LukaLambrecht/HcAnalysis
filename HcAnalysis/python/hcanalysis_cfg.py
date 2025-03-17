@@ -14,14 +14,22 @@ process.load("Configuration.StandardSequences.GeometryRecoDB_cff")
 process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_cff")
 process.load('Configuration.StandardSequences.Reconstruction_cff')
 
+# parse input file
+inputfile = sys.argv[1]
+if inputfile.startswith('root://'):
+    pass
+elif inputfile.startswith('/store/'):
+    inputfile = f'root://cms-xrd-global.cern.ch//{inputfile}'
+else:
+    inputfile = os.path.abspath(inputfile)
+    inputfile = f'file:{inputfile}'
+
 # set input file and number of events to process
 # (note: use -1 to process all events in the input file)
 inputfile = os.path.abspath(sys.argv[1])
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
 process.source = cms.Source("PoolSource",
-        fileNames = cms.untracked.vstring(
-        'file:{}'.format(inputfile)
-        )
+        fileNames = cms.untracked.vstring(inputfile)
 )
 
 # define the processing steps and objects to use
