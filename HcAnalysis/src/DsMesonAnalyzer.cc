@@ -24,6 +24,8 @@ void DsMesonAnalyzer::beginJob(TTree* outputTree){
     outputTree->Branch("DsMeson_pt", &_DsMeson_pt, "DsMeson_pt[nDsMeson]/D");
     outputTree->Branch("DsMeson_eta", &_DsMeson_eta, "DsMeson_eta[nDsMeson]/D");
     outputTree->Branch("DsMeson_phi", &_DsMeson_phi, "DsMeson_phi[nDsMeson]/D");
+    outputTree->Branch("DsMeson_hasFastGenMatch", &_DsMeson_hasFastGenMatch, "DsMeson_hasFastGenMatch[nDsMeson]/O");
+    outputTree->Branch("DsMeson_hasFastPartialGenMatch", &_DsMeson_hasFastPartialGenMatch, "DsMeson_hasFastPartialGenMatch[nDsMeson]/O");
     outputTree->Branch("DsMeson_PhiMeson_mass", &_DsMeson_PhiMeson_mass, "DsMeson_PhiMeson_mass[nDsMeson]/D");
     outputTree->Branch("DsMeson_PhiMeson_pt", &_DsMeson_PhiMeson_pt, "DsMeson_PhiMeson_pt[nDsMeson]/D");
     outputTree->Branch("DsMeson_PhiMeson_eta", &_DsMeson_PhiMeson_eta, "DsMeson_PhiMeson_eta[nDsMeson]/D");
@@ -39,6 +41,17 @@ void DsMesonAnalyzer::analyze(const edm::Event& iEvent){
     edm::Handle<std::vector<pat::PackedCandidate>> lostTracks;
     iEvent.getByToken(hcAnalyzer->lostTracksToken, lostTracks);
     MagneticField* bfield = new OAEParametrizedMagneticField("3_8T");
+
+    // settings for gen-matching
+    edm::Handle<std::vector<reco::GenParticle>> genParticles;
+    iEvent.getByToken(hcAnalyzer->prunedGenParticlesToken, genParticles);
+    std::map< std::string, const reco::GenParticle* > DsGenParticles;
+    bool doMatching = true; // to do: explicitly disable for data
+    if( !genParticles.isValid() ) doMatching = false;
+    if( doMatching ){
+        DsGenParticles = DsMesonGenAnalyzer::find_Ds_to_PhiPi_to_KKPi( *genParticles );
+        if( DsGenParticles["KPlus"]==nullptr ) doMatching = false;
+    }
 
     // merge packed candidate tracks and lost tracks
     std::vector<reco::Track> allTracks;
@@ -179,7 +192,29 @@ void DsMesonAnalyzer::analyze(const edm::Event& iEvent){
             _DsMeson_PhiMeson_pt[_nDsMeson] = phiP4.pt();
             _DsMeson_PhiMeson_eta[_nDsMeson] = phiP4.eta();
             _DsMeson_PhiMeson_phi[_nDsMeson] = phiP4.phi();
+
+            // check if this candidate can be matched to gen-level
+            _DsMeson_hasFastGenMatch[_nDsMeson] = false;
+            _DsMeson_hasFastGenMatch[_nDsMeson] = false;
+            if( doMatching ){
+                // method 1: fast matching using particles from DsMesonGenAnalyzer
+                double dRThreshold = 0.05;
+                if( GenTools::isGeometricTrackMatch( tr3, *DsGenParticles["Pi"], dRThreshold )
+                    && GenTools::isGeometricTrackMatch( postrack, *DsGenParticles["KPlus"], dRThreshold )
+                    && GenTools::isGeometricTrackMatch( negtrack, *DsGenParticles["KMinus"], dRThreshold ) ){
+                    _DsMeson_hasFastGenMatch[_nDsMeson] = true;
+                }
+                if( GenTools::isGeometricTrackMatch( tr3, *DsGenParticles["Pi"], dRThreshold )
+                    || GenTools::isGeometricTrackMatch( postrack, *DsGenParticles["KPlus"], dRThreshold )
+                    || GenTools::isGeometricTrackMatch( negtrack, *DsGenParticles["KMinus"], dRThreshold ) ){
+                    _DsMeson_hasFastPartialGenMatch[_nDsMeson] = true;
+                }
+            }
+
+            // update counter
             _nDsMeson++;
+
+            // break loop over third track in case maximum number was reached
             if( _nDsMeson == nDsMeson_max ) break;
 
         } // end loop over third track

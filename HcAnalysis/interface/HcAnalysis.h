@@ -49,6 +49,9 @@
 // specificd analyzers
 #include "HcAnalysis/HcAnalysis/interface/DsMesonAnalyzer.h"
 #include "HcAnalysis/HcAnalysis/interface/DsMesonGenAnalyzer.h"
+#include "HcAnalysis/HcAnalysis/interface/DZeroMesonGenAnalyzer.h"
+#include "HcAnalysis/HcAnalysis/interface/DStarMesonAnalyzer.h"
+#include "HcAnalysis/HcAnalysis/interface/DStarMesonGenAnalyzer.h"
 #include "HcAnalysis/HcAnalysis/interface/GenParticlePrinter.h"
 #include "HcAnalysis/HcAnalysis/interface/HiggsAnalyzer.h"
 
@@ -59,6 +62,9 @@
 // declare specific analyzers
 class DsMesonAnalyzer;
 class DsMesonGenAnalyzer;
+class DZeroMesonGenAnalyzer;
+class DStarMesonAnalyzer;
+class DStarMesonGenAnalyzer;
 class GenParticlePrinter;
 class HiggsAnalyzer;
 
@@ -68,6 +74,9 @@ class HcAnalysis : public edm::one::EDAnalyzer<edm::one::WatchLuminosityBlocks, 
   // define specific analyzers as friends
   friend DsMesonAnalyzer;
   friend DsMesonGenAnalyzer;
+  friend DZeroMesonGenAnalyzer;
+  friend DStarMesonAnalyzer;
+  friend DStarMesonGenAnalyzer;
   friend GenParticlePrinter;
   friend HiggsAnalyzer;
 
@@ -100,6 +109,9 @@ class HcAnalysis : public edm::one::EDAnalyzer<edm::one::WatchLuminosityBlocks, 
     // specific analyzers
     DsMesonAnalyzer* dsMesonAnalyzer;
     DsMesonGenAnalyzer* dsMesonGenAnalyzer;
+    DZeroMesonGenAnalyzer* dZeroMesonGenAnalyzer;
+    DStarMesonAnalyzer* dStarMesonAnalyzer;
+    DStarMesonGenAnalyzer* dStarMesonGenAnalyzer;
     GenParticlePrinter* genParticlePrinter;
     HiggsAnalyzer* higgsAnalyzer;
 

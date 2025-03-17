@@ -1,17 +1,15 @@
 /*
-Custom analyzer class for finding Ds mesons from triplets of tracks.
+Custom analyzer class for finding D* mesons from triplets of tracks.
 
 The targeted decay chain is the following:
-Ds -> phi pi+ -> K+ K- pi+
+D* -> D0 pi -> K pi pi
 */
 
-#ifndef DSMESON_ANALYZER_H
-#define DSMESON_ANALYZER_H
+#ifndef DSTARMESON_ANALYZER_H
+#define DSTARMESON_ANALYZER_H
 
 // include other parts of the framework
 #include "HcAnalysis/HcAnalysis/interface/HcAnalysis.h"
-#include "HcAnalysis/HcAnalysis/interface/GenTools.h"
-#include "HcAnalysis/HcAnalysis/interface/DsMesonGenAnalyzer.h"
 
 // system include files
 #include <memory>
@@ -60,7 +58,7 @@ Ds -> phi pi+ -> K+ K- pi+
 
 class HcAnalysis;
 
-class DsMesonAnalyzer {
+class DStarMesonAnalyzer {
   friend class HcAnalysis;
   private:
 
@@ -71,26 +69,27 @@ class DsMesonAnalyzer {
     static constexpr double pimass2 = pimass*pimass;
     static constexpr double kmass = 0.493677;
     static constexpr double kmass2 = kmass*kmass;
-    static constexpr double phimass = 1.019461;
-    static constexpr double dsmass = 1.96847;
+    static constexpr double dzeromass = 1.86484;
+    static constexpr double dstarmass = 1.96847;
 
     // ROOT tree variable declarations
-    static const unsigned nDsMeson_max = 30;
-    unsigned _nDsMeson = 0;
-    double _DsMeson_mass[nDsMeson_max];
-    double _DsMeson_pt[nDsMeson_max];
-    double _DsMeson_eta[nDsMeson_max];
-    double _DsMeson_phi[nDsMeson_max];
-    bool _DsMeson_hasFastGenMatch[nDsMeson_max];
-    bool _DsMeson_hasFastPartialGenMatch[nDsMeson_max];
-    double _DsMeson_PhiMeson_mass[nDsMeson_max];
-    double _DsMeson_PhiMeson_pt[nDsMeson_max];
-    double _DsMeson_PhiMeson_eta[nDsMeson_max];
-    double _DsMeson_PhiMeson_phi[nDsMeson_max];
+    static const unsigned nDStarMeson_max = 30;
+    unsigned _nDStarMeson = 0;
+    double _DStarMeson_mass[nDStarMeson_max];
+    double _DStarMeson_pt[nDStarMeson_max];
+    double _DStarMeson_eta[nDStarMeson_max];
+    double _DStarMeson_phi[nDStarMeson_max];
+    bool _DStarMeson_hasFastGenMatch[nDStarMeson_max];
+    bool _DStarMeson_hasFastPartialGenMatch[nDStarMeson_max];
+    double _DStarMeson_DZeroMeson_mass[nDStarMeson_max];
+    double _DStarMeson_DZeroMeson_pt[nDStarMeson_max];
+    double _DStarMeson_DZeroMeson_eta[nDStarMeson_max];
+    double _DStarMeson_DZeroMeson_phi[nDStarMeson_max];
+    double _DStarMeson_DZeroMeson_massDiff[nDStarMeson_max];
 
   public:
-    DsMesonAnalyzer(const edm::ParameterSet& iConfig, HcAnalysis* vars);
-    ~DsMesonAnalyzer();
+    DStarMesonAnalyzer(const edm::ParameterSet& iConfig, HcAnalysis* vars);
+    ~DStarMesonAnalyzer();
     
     // template member functions
     void beginJob(TTree*);
