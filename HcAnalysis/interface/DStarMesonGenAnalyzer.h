@@ -43,9 +43,26 @@ class DStarMesonGenAnalyzer {
 
     HcAnalysis* hcAnalyzer;
 
-    int _nGenDStarMeson = 0;
-    int _nGenDStarMesonToKPiPi = 0;
+    static const unsigned nGenDStarMeson_max = 5;
+
     int _genDStarMesonDecayType = 0;
+    int _nGenDStarMesonToKPiPi = 0;
+
+    double _genDStarMeson_DStar_pt[nGenDStarMeson_max];
+    double _genDStarMeson_DStar_eta[nGenDStarMeson_max];
+    double _genDStarMeson_DStar_phi[nGenDStarMeson_max];
+    double _genDStarMeson_DZero_pt[nGenDStarMeson_max];
+    double _genDStarMeson_DZero_eta[nGenDStarMeson_max];
+    double _genDStarMeson_DZero_phi[nGenDStarMeson_max];
+    double _genDStarMeson_Pi1_pt[nGenDStarMeson_max];
+    double _genDStarMeson_Pi1_eta[nGenDStarMeson_max];
+    double _genDStarMeson_Pi1_phi[nGenDStarMeson_max];
+    double _genDStarMeson_K_pt[nGenDStarMeson_max];
+    double _genDStarMeson_K_eta[nGenDStarMeson_max];
+    double _genDStarMeson_K_phi[nGenDStarMeson_max];
+    double _genDStarMeson_Pi2_pt[nGenDStarMeson_max];
+    double _genDStarMeson_Pi2_eta[nGenDStarMeson_max];
+    double _genDStarMeson_Pi2_phi[nGenDStarMeson_max];
 
   public:
     DStarMesonGenAnalyzer(const edm::ParameterSet& iConfig, HcAnalysis* vars);
@@ -55,7 +72,7 @@ class DStarMesonGenAnalyzer {
     void analyze(const edm::Event&);
 
     static int find_DStar_decay_type(const std::vector<reco::GenParticle>&);
-    static std::map< std::string, const reco::GenParticle* > find_DStar_to_DZeroPi_to_KPiPi(
+    static std::vector< std::map< std::string, const reco::GenParticle* > > find_DStar_to_DZeroPi_to_KPiPi(
       const std::vector<reco::GenParticle>&);
 };
 

@@ -43,9 +43,26 @@ class DsMesonGenAnalyzer {
 
     HcAnalysis* hcAnalyzer;
 
-    int _nGenDsMeson = 0;
-    int _nGenDsMesonToKKPi = 0;
+    static const unsigned nGenDsMeson_max = 5;
+
     int _genDsMesonDecayType = 0;
+    int _nGenDsMesonToKKPi = 0;
+
+    double _genDsMeson_Ds_pt[nGenDsMeson_max];
+    double _genDsMeson_Ds_eta[nGenDsMeson_max];
+    double _genDsMeson_Ds_phi[nGenDsMeson_max];
+    double _genDsMeson_Phi_pt[nGenDsMeson_max];
+    double _genDsMeson_Phi_eta[nGenDsMeson_max];
+    double _genDsMeson_Phi_phi[nGenDsMeson_max];
+    double _genDsMeson_Pi_pt[nGenDsMeson_max];
+    double _genDsMeson_Pi_eta[nGenDsMeson_max];
+    double _genDsMeson_Pi_phi[nGenDsMeson_max];
+    double _genDsMeson_KPlus_pt[nGenDsMeson_max];
+    double _genDsMeson_KPlus_eta[nGenDsMeson_max];
+    double _genDsMeson_KPlus_phi[nGenDsMeson_max];
+    double _genDsMeson_KMinus_pt[nGenDsMeson_max];
+    double _genDsMeson_KMinus_eta[nGenDsMeson_max];
+    double _genDsMeson_KMinus_phi[nGenDsMeson_max];
 
   public:
     DsMesonGenAnalyzer(const edm::ParameterSet& iConfig, HcAnalysis* vars);
@@ -55,7 +72,7 @@ class DsMesonGenAnalyzer {
     void analyze(const edm::Event&);
 
     static int find_Ds_decay_type(const std::vector<reco::GenParticle>&);
-    static std::map< std::string, const reco::GenParticle* > find_Ds_to_PhiPi_to_KKPi(
+    static std::vector< std::map< std::string, const reco::GenParticle* > > find_Ds_to_PhiPi_to_KKPi(
       const std::vector<reco::GenParticle>&);
 };
 

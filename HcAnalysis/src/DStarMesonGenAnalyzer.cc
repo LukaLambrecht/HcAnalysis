@@ -15,9 +15,24 @@ DStarMesonGenAnalyzer::~DStarMesonGenAnalyzer(){
 
 // beginJob //
 void DStarMesonGenAnalyzer::beginJob(TTree* outputTree){
-    outputTree->Branch("nGenDStarMeson", &_nGenDStarMeson, "nGenDStarMeson/i");
-    outputTree->Branch("nGenDStarMesonToKPiPi", &_nGenDStarMesonToKPiPi, "nGenDStarMesonToKPiPi/i");
     outputTree->Branch("genDStarMesonDecayType", &_genDStarMesonDecayType, "genDStarMesonDecayType/i");
+    outputTree->Branch("nGenDStarMesonToKPiPi", &_nGenDStarMesonToKPiPi, "nGenDStarMesonToKPiPi/i");
+
+    outputTree->Branch("genDStarMeson_DStar_pt", &_genDStarMeson_DStar_pt, "genDStarMeson_DStar_pt[nGenDStarMesonToKPiPi]/D");
+    outputTree->Branch("genDStarMeson_DStar_eta", &_genDStarMeson_DStar_eta, "genDStarMeson_DStar_eta[nGenDStarMesonToKPiPi]/D");
+    outputTree->Branch("genDStarMeson_DStar_phi", &_genDStarMeson_DStar_phi, "genDStarMeson_DStar_phi[nGenDStarMesonToKPiPi]/D");
+    outputTree->Branch("genDStarMeson_DZero_pt", &_genDStarMeson_DZero_pt, "genDStarMeson_DZero_pt[nGenDStarMesonToKPiPi]/D");
+    outputTree->Branch("genDStarMeson_DZero_eta", &_genDStarMeson_DZero_eta, "genDStarMeson_DZero_eta[nGenDStarMesonToKPiPi]/D");
+    outputTree->Branch("genDStarMeson_DZero_phi", &_genDStarMeson_DZero_phi, "genDStarMeson_DZero_phi[nGenDStarMesonToKPiPi]/D");
+    outputTree->Branch("genDStarMeson_Pi1_pt", &_genDStarMeson_Pi1_pt, "genDStarMeson_Pi1_pt[nGenDStarMesonToKPiPi]/D");
+    outputTree->Branch("genDStarMeson_Pi1_eta", &_genDStarMeson_Pi1_eta, "genDStarMeson_Pi1_eta[nGenDStarMesonToKPiPi]/D");
+    outputTree->Branch("genDStarMeson_Pi1_phi", &_genDStarMeson_Pi1_phi, "genDStarMeson_Pi1_phi[nGenDStarMesonToKPiPi]/D");
+    outputTree->Branch("genDStarMeson_K_pt", &_genDStarMeson_K_pt, "genDStarMeson_K_pt[nGenDStarMesonToKPiPi]/D");
+    outputTree->Branch("genDStarMeson_K_eta", &_genDStarMeson_K_eta, "genDStarMeson_K_eta[nGenDStarMesonToKPiPi]/D");
+    outputTree->Branch("genDStarMeson_K_phi", &_genDStarMeson_K_phi, "genDStarMeson_K_phi[nGenDStarMesonToKPiPi]/D");
+    outputTree->Branch("genDStarMeson_Pi2_pt", &_genDStarMeson_Pi2_pt, "genDStarMeson_Pi2_pt[nGenDStarMesonToKPiPi]/D");
+    outputTree->Branch("genDStarMeson_Pi2_eta", &_genDStarMeson_Pi2_eta, "genDStarMeson_Pi2_eta[nGenDStarMesonToKPiPi]/D");
+    outputTree->Branch("genDStarMeson_Pi2_phi", &_genDStarMeson_Pi2_phi, "genDStarMeson_Pi2_phi[nGenDStarMesonToKPiPi]/D");
 }
 
 // analyze (main method) //
@@ -35,14 +50,28 @@ void DStarMesonGenAnalyzer::analyze(const edm::Event& iEvent){
     _genDStarMesonDecayType = find_DStar_decay_type( *genParticles );
 
     // find D* -> pi D0 -> pi K pi
-    std::map< std::string, const reco::GenParticle* > DStarGenParticles;
+    std::vector< std::map< std::string, const reco::GenParticle* > > DStarGenParticles;
     DStarGenParticles = find_DStar_to_DZeroPi_to_KPiPi( *genParticles );
     
     // set variables to write to the tree
-    if( DStarGenParticles["DStar"]==nullptr ) _nGenDStarMeson = 0;
-    else _nGenDStarMeson = 1;
-    if( DStarGenParticles["K"]==nullptr ) _nGenDStarMesonToKPiPi = 0;
-    else _nGenDStarMesonToKPiPi = 1;
+    _nGenDStarMesonToKPiPi = DStarGenParticles.size();
+    for(unsigned int idx=0; idx < DStarGenParticles.size(); idx++){
+        _genDStarMeson_DStar_pt[idx] = DStarGenParticles[idx].at("DStar")->pt();
+        _genDStarMeson_DStar_eta[idx] = DStarGenParticles[idx].at("DStar")->eta();
+        _genDStarMeson_DStar_phi[idx] = DStarGenParticles[idx].at("DStar")->phi();
+        _genDStarMeson_DZero_pt[idx] = DStarGenParticles[idx].at("DZero")->pt();
+        _genDStarMeson_DZero_eta[idx] = DStarGenParticles[idx].at("DZero")->eta();
+        _genDStarMeson_DZero_phi[idx] = DStarGenParticles[idx].at("DZero")->phi();
+        _genDStarMeson_Pi1_pt[idx] = DStarGenParticles[idx].at("Pi1")->pt();
+        _genDStarMeson_Pi1_eta[idx] = DStarGenParticles[idx].at("Pi1")->eta();
+        _genDStarMeson_Pi1_phi[idx] = DStarGenParticles[idx].at("Pi1")->phi();
+        _genDStarMeson_K_pt[idx] = DStarGenParticles[idx].at("K")->pt();
+        _genDStarMeson_K_eta[idx] = DStarGenParticles[idx].at("K")->eta();
+        _genDStarMeson_K_phi[idx] = DStarGenParticles[idx].at("K")->phi();
+        _genDStarMeson_Pi2_pt[idx] = DStarGenParticles[idx].at("Pi2")->pt();
+        _genDStarMeson_Pi2_eta[idx] = DStarGenParticles[idx].at("Pi2")->eta();
+        _genDStarMeson_Pi2_phi[idx] = DStarGenParticles[idx].at("Pi2")->phi();
+    }
 }
 
 int DStarMesonGenAnalyzer::find_DStar_decay_type(
@@ -130,18 +159,12 @@ int DStarMesonGenAnalyzer::find_DStar_decay_type(
 }
 
 
-std::map< std::string, const reco::GenParticle* > DStarMesonGenAnalyzer::find_DStar_to_DZeroPi_to_KPiPi(
+std::vector< std::map< std::string, const reco::GenParticle* > > DStarMesonGenAnalyzer::find_DStar_to_DZeroPi_to_KPiPi(
         const std::vector<reco::GenParticle>& genParticles){
     // find D* -> D0 pi -> K pi pi at GEN level
 
     // initialize output
-    std::map< std::string, const reco::GenParticle* > res = {
-        {"DStar", nullptr},
-        {"DZero", nullptr},
-        {"Pi1", nullptr},
-        {"K", nullptr},
-        {"Pi2", nullptr},
-    };
+    std::vector< std::map< std::string, const reco::GenParticle* > > res;
 
     // find all gen particles from the hard scattering
     // (implemented here as having a proton as their mother)
@@ -154,101 +177,88 @@ std::map< std::string, const reco::GenParticle* > DStarMesonGenAnalyzer::find_DS
     }
     if( hardScatterParticles.size() < 1 ) return res;
 
-    // find the Ds meson
-    int nDStarMesons = 0;
-    const reco::GenParticle* dstar;
+    // loop over all hard scattering particles
     for( const reco::GenParticle* p : hardScatterParticles ){
+    
+        // check if it is a D* meson
         int pdgid = p->pdgId();
-        if(std::abs(pdgid) == 413){
-            nDStarMesons ++;
-            dstar = p;
+        if(std::abs(pdgid) != 413) continue;
+        const reco::GenParticle* dstar = p;
+
+        // find its daughters
+        std::vector<const reco::GenParticle*> dstarDaughters;
+        for(unsigned int i=0; i<dstar->numberOfDaughters(); ++i){
+            dstarDaughters.push_back( &genParticles[dstar->daughterRef(i).key()] );
         }
+
+        // printouts
+        //std::cout << "D* daughters:" << std::endl;
+        //for( const reco::GenParticle* p: dstarDaughters ){ std::cout << p->pdgId() << " "; }
+        //std::cout << std::endl;
+
+        // find the D0 meson and the pion
+        if( dstarDaughters.size()!=2 ) continue;
+        const reco::GenParticle* dzero;
+        const reco::GenParticle* pi;
+        if( std::abs(dstarDaughters.at(0)->pdgId())==421
+            && std::abs(dstarDaughters.at(1)->pdgId())==211 ){
+            dzero = dstarDaughters.at(0);
+            pi = dstarDaughters.at(1);
+        } else if( std::abs(dstarDaughters.at(0)->pdgId())==211
+            && std::abs(dstarDaughters.at(1)->pdgId())==421 ){
+            dzero = dstarDaughters.at(1);
+            pi = dstarDaughters.at(0);
+        } else continue;
+
+        // printouts
+        //std::cout << "  -> found D* -> D0 + pi" << std::endl;
+
+        // find the daughters of the D0
+        std::vector<const reco::GenParticle*> dzeroDaughters;
+        for(unsigned int i=0; i<dzero->numberOfDaughters(); ++i){
+            dzeroDaughters.push_back( &genParticles[dzero->daughterRef(i).key()] );
+        }
+
+        // printouts
+        //std::cout << "D0 daughters" << std::endl;
+        //for( const reco::GenParticle* p: dzeroDaughters ){ std::cout << p->pdgId() << " "; } 
+        //std::cout << std::endl;
+
+        // find the kaon and the pion
+        const reco::GenParticle* K;
+        const reco::GenParticle* pi2;
+        if( dzeroDaughters.size()!=2 ) continue;
+        if( std::abs(dzeroDaughters.at(0)->pdgId())==321
+            && std::abs(dzeroDaughters.at(1)->pdgId())==211 ){
+            K = dzeroDaughters.at(0);
+            pi2 = dzeroDaughters.at(1);
+        } else if( std::abs(dzeroDaughters.at(0)->pdgId())==211
+            && std::abs(dzeroDaughters.at(1)->pdgId())==321 ){
+            K = dzeroDaughters.at(1);
+            pi2 = dzeroDaughters.at(0);
+        } else continue;
+
+        // print kinematics
+        /*std::cout << "D* kinematics:" << std::endl;
+        std::cout << dstar.pt() << " " << dstar.eta() << " " << dstar.phi() << std::endl;
+        std::cout << "pion kinematics:" << std::endl;
+        std::cout << pi->pt() << " " << pi->eta() << " " << pi->phi() << std::endl;
+        std::cout << "D0 kinematics:" << std::endl;
+        std::cout << dzero->pt() << " " << dzero->eta() << " " << dzero->phi() << std::endl;
+        std::cout << "kaon kinematics:" << std::endl;
+        std::cout << K->pt() << " " << K->eta() << " " << K->phi() << std::endl;
+        std::cout << "pion2 kinematics:" << std::endl;
+        std::cout << pi2->pt() << " " << pi2->eta() << " " << pi2->phi() << std::endl;*/
+
+        // set the particles in the output map
+        std::map< std::string, const reco::GenParticle* > thisres = {
+            {"DStar", dstar},
+            {"DZero", dzero},
+            {"Pi1", pi},
+            {"K", K},
+            {"Pi2", pi2}
+        };
+        res.push_back(thisres);
     }
-
-    // handle the case of no or multiple D* mesons found
-    if( nDStarMesons==0 ){
-        //std::cout << "WARNING: no D* found" << std::endl;
-        return res;
-    }
-    else if( nDStarMesons > 1 ){
-        //std::cout << "WARNING: multiple D* found" << std::endl;
-        return res;
-    }
-
-    // store the D* meson in the output map
-    res["DStar"] = dstar;
-
-    // find its daughters
-    std::vector<const reco::GenParticle*> dstarDaughters;
-    for(unsigned int i=0; i<dstar->numberOfDaughters(); ++i){
-        dstarDaughters.push_back( &genParticles[dstar->daughterRef(i).key()] );
-    }
-
-    // printouts
-    //std::cout << "D* daughters:" << std::endl;
-    //for( const reco::GenParticle* p: dstarDaughters ){ std::cout << p->pdgId() << " "; }
-    //std::cout << std::endl;
-
-    // find the D0 meson and the pion
-    if( dstarDaughters.size()!=2 ) return res;
-    const reco::GenParticle* dzero;
-    const reco::GenParticle* pi;
-    if( std::abs(dstarDaughters.at(0)->pdgId())==421
-        && std::abs(dstarDaughters.at(1)->pdgId())==211 ){
-        dzero = dstarDaughters.at(0);
-        pi = dstarDaughters.at(1);
-    } else if( std::abs(dstarDaughters.at(0)->pdgId())==211
-        && std::abs(dstarDaughters.at(1)->pdgId())==421 ){
-        dzero = dstarDaughters.at(1);
-        pi = dstarDaughters.at(0);
-    } else return res;
-
-    // store the particles in the output map
-    res["DZero"] = dzero;
-    res["Pi1"] = pi;
-
-    // printouts
-    //std::cout << "  -> found D* -> D0 + pi" << std::endl;
-
-    // find the daughters of the D0
-    std::vector<const reco::GenParticle*> dzeroDaughters;
-    for(unsigned int i=0; i<dzero->numberOfDaughters(); ++i){
-        dzeroDaughters.push_back( &genParticles[dzero->daughterRef(i).key()] );
-    }
-
-    // printouts
-    //std::cout << "D0 daughters" << std::endl;
-    //for( const reco::GenParticle* p: dzeroDaughters ){ std::cout << p->pdgId() << " "; } 
-    //std::cout << std::endl;
-
-    // find the kaon and the pion
-    const reco::GenParticle* K;
-    const reco::GenParticle* pi2;
-    if( dzeroDaughters.size()!=2 ) return res;
-    if( std::abs(dzeroDaughters.at(0)->pdgId())==321
-        && std::abs(dzeroDaughters.at(1)->pdgId())==211 ){
-        K = dzeroDaughters.at(0);
-        pi2 = dzeroDaughters.at(1);
-    } else if( std::abs(dzeroDaughters.at(0)->pdgId())==211
-        && std::abs(dzeroDaughters.at(1)->pdgId())==321 ){
-        K = dzeroDaughters.at(1);
-        pi2 = dzeroDaughters.at(0);
-    } else return res;
-
-    // print kinematics
-    /*std::cout << "D* kinematics:" << std::endl;
-    std::cout << dstar.pt() << " " << dstar.eta() << " " << dstar.phi() << std::endl;
-    std::cout << "pion kinematics:" << std::endl;
-    std::cout << pi->pt() << " " << pi->eta() << " " << pi->phi() << std::endl;
-    std::cout << "D0 kinematics:" << std::endl;
-    std::cout << dzero->pt() << " " << dzero->eta() << " " << dzero->phi() << std::endl;
-    std::cout << "kaon kinematics:" << std::endl;
-    std::cout << K->pt() << " " << K->eta() << " " << K->phi() << std::endl;
-    std::cout << "pion2 kinematics:" << std::endl;
-    std::cout << pi2->pt() << " " << pi2->eta() << " " << pi2->phi() << std::endl;*/
-
-    // set the particles in the output map
-    res["K"] = K;
-    res["Pi2"] = pi2;
     return res;
 }

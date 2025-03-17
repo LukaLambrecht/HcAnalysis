@@ -45,12 +45,12 @@ void DsMesonAnalyzer::analyze(const edm::Event& iEvent){
     // settings for gen-matching
     edm::Handle<std::vector<reco::GenParticle>> genParticles;
     iEvent.getByToken(hcAnalyzer->prunedGenParticlesToken, genParticles);
-    std::map< std::string, const reco::GenParticle* > DsGenParticles;
+    std::vector< std::map< std::string, const reco::GenParticle* > > DsGenParticles;
     bool doMatching = true; // to do: explicitly disable for data
     if( !genParticles.isValid() ) doMatching = false;
     if( doMatching ){
         DsGenParticles = DsMesonGenAnalyzer::find_Ds_to_PhiPi_to_KKPi( *genParticles );
-        if( DsGenParticles["KPlus"]==nullptr ) doMatching = false;
+        if( DsGenParticles.size()==0 ) doMatching = false;
     }
 
     // merge packed candidate tracks and lost tracks
@@ -197,17 +197,18 @@ void DsMesonAnalyzer::analyze(const edm::Event& iEvent){
             _DsMeson_hasFastGenMatch[_nDsMeson] = false;
             _DsMeson_hasFastGenMatch[_nDsMeson] = false;
             if( doMatching ){
-                // method 1: fast matching using particles from DsMesonGenAnalyzer
-                double dRThreshold = 0.05;
-                if( GenTools::isGeometricTrackMatch( tr3, *DsGenParticles["Pi"], dRThreshold )
-                    && GenTools::isGeometricTrackMatch( postrack, *DsGenParticles["KPlus"], dRThreshold )
-                    && GenTools::isGeometricTrackMatch( negtrack, *DsGenParticles["KMinus"], dRThreshold ) ){
-                    _DsMeson_hasFastGenMatch[_nDsMeson] = true;
-                }
-                if( GenTools::isGeometricTrackMatch( tr3, *DsGenParticles["Pi"], dRThreshold )
-                    || GenTools::isGeometricTrackMatch( postrack, *DsGenParticles["KPlus"], dRThreshold )
-                    || GenTools::isGeometricTrackMatch( negtrack, *DsGenParticles["KMinus"], dRThreshold ) ){
-                    _DsMeson_hasFastPartialGenMatch[_nDsMeson] = true;
+                for( const auto& pmap : DsGenParticles){
+                    double dRThreshold = 0.05;
+                    if( GenTools::isGeometricTrackMatch( tr3, *pmap.at("Pi"), dRThreshold )
+                        && GenTools::isGeometricTrackMatch( postrack, *pmap.at("KPlus"), dRThreshold )
+                        && GenTools::isGeometricTrackMatch( negtrack, *pmap.at("KMinus"), dRThreshold ) ){
+                        _DsMeson_hasFastGenMatch[_nDsMeson] = true;
+                    }
+                    if( GenTools::isGeometricTrackMatch( tr3, *pmap.at("Pi"), dRThreshold )
+                        || GenTools::isGeometricTrackMatch( postrack, *pmap.at("KPlus"), dRThreshold )
+                        || GenTools::isGeometricTrackMatch( negtrack, *pmap.at("KMinus"), dRThreshold ) ){
+                        _DsMeson_hasFastPartialGenMatch[_nDsMeson] = true;
+                    }
                 }
             }
 

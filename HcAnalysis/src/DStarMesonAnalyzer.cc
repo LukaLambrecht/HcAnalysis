@@ -46,12 +46,12 @@ void DStarMesonAnalyzer::analyze(const edm::Event& iEvent){
     // settings for gen-matching
     edm::Handle<std::vector<reco::GenParticle>> genParticles;
     iEvent.getByToken(hcAnalyzer->prunedGenParticlesToken, genParticles);
-    std::map< std::string, const reco::GenParticle* > DStarGenParticles;
+    std::vector< std::map< std::string, const reco::GenParticle* > > DStarGenParticles;
     bool doMatching = true; // to do: explicitly disable for data
     if( !genParticles.isValid() ) doMatching = false;
     if( doMatching ){
         DStarGenParticles = DStarMesonGenAnalyzer::find_DStar_to_DZeroPi_to_KPiPi( *genParticles );
-        if( DStarGenParticles["Pi2"]==nullptr ) doMatching = false;
+        if( DStarGenParticles.size()==0 ) doMatching = false;
     }
 
     // merge packed candidate tracks and lost tracks
@@ -192,21 +192,22 @@ void DStarMesonAnalyzer::analyze(const edm::Event& iEvent){
             _DStarMeson_hasFastGenMatch[_nDStarMeson] = false;
             _DStarMeson_hasFastGenMatch[_nDStarMeson] = false;
             if( doMatching ){
-                // method 1: fast matching using particles from DStarMesonGenAnalyzer
-                double dRThreshold = 0.05;
-                if( GenTools::isGeometricTrackMatch( tr3, *DStarGenParticles["Pi1"], dRThreshold )
-                    && ( (GenTools::isGeometricTrackMatch( postrack, *DStarGenParticles["K"], dRThreshold )
-                          && GenTools::isGeometricTrackMatch( negtrack, *DStarGenParticles["Pi2"], dRThreshold ) )
-                         || (GenTools::isGeometricTrackMatch( postrack, *DStarGenParticles["Pi2"], dRThreshold )
-                          && GenTools::isGeometricTrackMatch( negtrack, *DStarGenParticles["K"], dRThreshold ) ) ) ){
-                    _DStarMeson_hasFastGenMatch[_nDStarMeson] = true;
-                }
-                if( GenTools::isGeometricTrackMatch( tr3, *DStarGenParticles["Pi1"], dRThreshold )
-                         || GenTools::isGeometricTrackMatch( postrack, *DStarGenParticles["K"], dRThreshold )
-                         || GenTools::isGeometricTrackMatch( negtrack, *DStarGenParticles["Pi2"], dRThreshold )
-                         || GenTools::isGeometricTrackMatch( postrack, *DStarGenParticles["Pi2"], dRThreshold )
-                         || GenTools::isGeometricTrackMatch( negtrack, *DStarGenParticles["K"], dRThreshold ) ){
-                    _DStarMeson_hasFastPartialGenMatch[_nDStarMeson] = true;
+                for( const auto& pmap : DStarGenParticles){
+                    double dRThreshold = 0.05;
+                    if( GenTools::isGeometricTrackMatch( tr3, *pmap.at("Pi1"), dRThreshold )
+                        && ( (GenTools::isGeometricTrackMatch( postrack, *pmap.at("K"), dRThreshold )
+                              && GenTools::isGeometricTrackMatch( negtrack, *pmap.at("Pi2"), dRThreshold ) )
+                             || (GenTools::isGeometricTrackMatch( postrack, *pmap.at("Pi2"), dRThreshold )
+                              && GenTools::isGeometricTrackMatch( negtrack, *pmap.at("K"), dRThreshold ) ) ) ){
+                        _DStarMeson_hasFastGenMatch[_nDStarMeson] = true;
+                    }
+                    if( GenTools::isGeometricTrackMatch( tr3, *pmap.at("Pi1"), dRThreshold )
+                         || GenTools::isGeometricTrackMatch( postrack, *pmap.at("K"), dRThreshold )
+                         || GenTools::isGeometricTrackMatch( negtrack, *pmap.at("Pi2"), dRThreshold )
+                         || GenTools::isGeometricTrackMatch( postrack, *pmap.at("Pi2"), dRThreshold )
+                         || GenTools::isGeometricTrackMatch( negtrack, *pmap.at("K"), dRThreshold ) ){
+                        _DStarMeson_hasFastPartialGenMatch[_nDStarMeson] = true;
+                    }
                 }
             }
 
