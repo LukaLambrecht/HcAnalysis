@@ -23,9 +23,21 @@ if __name__=='__main__':
         'outputdir': 'Ds',
         'extrainfo': r"'$D_{s} \rightarrow \phi \pi \rightarrow K K \pi$'"
       },
+      'Ds-gen': {
+        'variables': 'variables/variables_ds_gen.json',
+        'genmatchbranch': None,
+        'outputdir': 'Ds',
+        'extrainfo': r"'$D_{s} \rightarrow \phi \pi \rightarrow K K \pi$'"
+      },
       'DStar': {
         'variables': 'variables/variables_dstar.json',
         'genmatchbranch': 'DStarMeson_hasFastGenMatch',
+        'outputdir': 'DStar',
+        'extrainfo': r"'$D* \rightarrow D^{0} \pi \rightarrow K \pi \pi$'"
+      },
+      'DStar-gen': {
+        'variables': 'variables/variables_dstar_gen.json',
+        'genmatchbranch': None,
         'outputdir': 'DStar',
         'extrainfo': r"'$D* \rightarrow D^{0} \pi \rightarrow K \pi \pi$'"
       }

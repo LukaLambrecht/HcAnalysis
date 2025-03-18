@@ -8,6 +8,15 @@
   "xhigh": 10.5,
   "nbins": 11
 },
+{
+  "name": "nGenDsMesonToKKPi",
+  "variable": "nGenDsMesonToKKPi",
+  "axtitle": "Number of gen-level Ds -> K K pi per event",
+  "unit": "",
+  "xlow": -0.5,
+  "xhigh": 2.5,
+  "nbins": 3
+},
 { 
   "name": "genDZeroMesonDecayType",
   "variable": "genDZeroMesonDecayType",
@@ -25,5 +34,14 @@
   "xlow": -0.5,
   "xhigh": 10.5,
   "nbins": 11
+},
+{
+  "name": "nGenDStarMesonToKPiPi",
+  "variable": "nGenDStarMesonToKPiPi",
+  "axtitle": "Number of gen-level D* -> K pi pi per event",
+  "unit": "",
+  "xlow": -0.5,
+  "xhigh": 3.5,
+  "nbins": 4
 }
 ]
