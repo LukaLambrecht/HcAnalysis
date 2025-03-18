@@ -78,12 +78,11 @@ int DsMesonGenAnalyzer::find_Ds_decay_type(
         const std::vector<reco::GenParticle>& genParticles){
     // find what type of event this is concerning the production and decay of Ds mesons.
     // the numbering convention is as follows:
-    // 0: undefined, none of the below
-    // 1: Ds -> phi pi -> K K pi (i.e. the decay of interest)
-    // 2: Ds -> phi pi -> other pi
-    // 3: Ds -> other
-    // 4: multiple Ds mesons, to be decided how to handle if significant
-    // 10: no Ds meson, but another charmed meson
+    // 0: undefined, none of the below.
+    // 1: at least one Ds -> phi pi -> K K pi (i.e. the decay of interest).
+    // 2: at least one Ds -> ph pi, but excluding the above.
+    // 3: at least one Ds, but excluding the above.
+    // 4: at least one charmed hadron, but excluding the above.
     
     // find all gen particles from the hard scattering
     // (implemented here as having a proton as their mother)
@@ -96,63 +95,62 @@ int DsMesonGenAnalyzer::find_Ds_decay_type(
     }
     if( hardScatterParticles.size() < 1 ) return 0;
 
-    // find a Ds meson or other charmed mesons
-    int nDsMesons = 0;
-    reco::GenParticle ds;
-    bool hasOtherCharmedMeson = false;
+    // initialize result
+    int res = 99;
+
+    // loop over hard scattering particles
     for( const reco::GenParticle* p : hardScatterParticles ){
+
+        // check if it is a charmed hadron
         int pdgid = p->pdgId();
-        if(std::abs(pdgid) == 431){
-            nDsMesons ++;
-            ds = *p;
+        bool cMeson = (std::abs(pdgid) > 400 && std::abs(pdgid) < 500);
+        bool cBaryon = (std::abs(pdgid) > 4000 && std::abs(pdgid) < 5000);
+        if( !(cMeson || cBaryon) ) continue;
+        if(res > 4) res = 4;
+
+        // check if it is a D* meson
+        if(std::abs(pdgid) != 431) continue;
+        const reco::GenParticle* ds = p;
+        if(res > 3) res = 3;
+
+        // find the decay products of the Ds meson
+        std::vector<const reco::GenParticle*> dsDaughters;
+        for(unsigned int i=0; i < ds->numberOfDaughters(); ++i){
+            dsDaughters.push_back( &genParticles[ds->daughterRef(i).key()] );
         }
-        else if(std::abs(pdgid) > 400 || std::abs(pdgid) < 500){
-            hasOtherCharmedMeson = true;
+
+        // find if they are a pion and a phi meson
+        if( dsDaughters.size()!=2 ) continue;
+        const reco::GenParticle* phi;
+        if( std::abs(dsDaughters.at(0)->pdgId())==333
+            && std::abs(dsDaughters.at(1)->pdgId())==211 ){
+            phi = dsDaughters.at(0);
+        } else if( std::abs(dsDaughters.at(0)->pdgId())==211
+            && std::abs(dsDaughters.at(1)->pdgId())==333 ){
+            phi = dsDaughters.at(1);
+        } else continue;
+        if(res > 2) res = 2;
+
+        // find the daughters of the phi
+        std::vector<const reco::GenParticle*> phiDaughters;
+        for(unsigned int i=0; i < phi->numberOfDaughters(); ++i){
+            phiDaughters.push_back( &genParticles[phi->daughterRef(i).key()] );
         }
+
+        // find if they are kaons
+        if( phiDaughters.size()!=2 ) continue;
+        if( std::abs(phiDaughters.at(0)->pdgId())==321
+            && std::abs(phiDaughters.at(1)->pdgId())==321 ){
+            // pass
+        } else continue;
+
+        // if all checks above succeeded,
+        // we have a genuine Ds -> phi pi -> K K pi event
+        if(res > 1) res = 1;
+        break;
     }
-
-    // handle case of multiple Ds mesons
-    if( nDsMesons > 1 ) return 4;
-    
-    // handle case of no Ds mesons
-    if( nDsMesons == 0 ){
-        if( hasOtherCharmedMeson ) return 10;
-        else return 0;
-    }
-
-    // find the decay products of the Ds meson
-    std::vector<const reco::GenParticle*> dsDaughters;
-    for(unsigned int i=0; i < ds.numberOfDaughters(); ++i){
-        dsDaughters.push_back( &genParticles[ds.daughterRef(i).key()] );
-    }
-
-    // find if they are a pion and a phi meson
-    if( dsDaughters.size()!=2 ) return 3;
-    const reco::GenParticle* phi;
-    if( std::abs(dsDaughters.at(0)->pdgId())==333
-        && std::abs(dsDaughters.at(1)->pdgId())==211 ){
-        phi = dsDaughters.at(0);
-    } else if( std::abs(dsDaughters.at(0)->pdgId())==211
-        && std::abs(dsDaughters.at(1)->pdgId())==333 ){
-        phi = dsDaughters.at(1);
-    } else return 3;
-
-    // find the daughters of the phi
-    std::vector<const reco::GenParticle*> phiDaughters;
-    for(unsigned int i=0; i < phi->numberOfDaughters(); ++i){
-        phiDaughters.push_back( &genParticles[phi->daughterRef(i).key()] );
-    }
-
-    // find if they are kaons
-    if( phiDaughters.size()!=2 ) return 2;
-    if( std::abs(phiDaughters.at(0)->pdgId())==321
-        && std::abs(phiDaughters.at(1)->pdgId())==321 ){
-        // pass
-    } else return 2;
-
-    // if all checks above succeeded,
-    // we have a genuine Ds -> phi pi -> K K pi event
-    return 1;
+    if(res > 4) res = 0;
+    return res;
 }
 
 

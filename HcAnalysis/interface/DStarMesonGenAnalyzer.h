@@ -45,8 +45,8 @@ class DStarMesonGenAnalyzer {
 
     static const unsigned nGenDStarMeson_max = 5;
 
-    int _genDStarMesonDecayType = 0;
-    int _nGenDStarMesonToKPiPi = 0;
+    unsigned _genDStarMesonDecayType = 0;
+    unsigned _nGenDStarMesonToKPiPi = 0;
 
     double _genDStarMeson_DStar_pt[nGenDStarMeson_max];
     double _genDStarMeson_DStar_eta[nGenDStarMeson_max];

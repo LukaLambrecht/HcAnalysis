@@ -78,12 +78,11 @@ int DStarMesonGenAnalyzer::find_DStar_decay_type(
         const std::vector<reco::GenParticle>& genParticles){
     // find what type of event this is concerning the production and decay of D* mesons.
     // the numbering convention is as follows:
-    // 0: undefined, none of the below
-    // 1: D* -> D0 pi -> K pi pi (i.e. the decay of interest)
-    // 2: D* -> D0 pi -> other pi
-    // 3: D* -> other
-    // 4: multiple D* mesons, to be decided how to handle if significant
-    // 10: no D* meson, but another charmed meson
+    // 0: undefined, none of the below.
+    // 1: at least one D* -> D0 pi -> K pi pi (i.e. the decay of interest).
+    // 2: at least one D* -> D0 pi, but excluding the above.
+    // 3: at least one D*, but excluding the above.
+    // 4: at least one charmed hadron, but excluding the above.
     
     // find all gen particles from the hard scattering
     // (implemented here as having a proton as their mother)
@@ -96,66 +95,65 @@ int DStarMesonGenAnalyzer::find_DStar_decay_type(
     }
     if( hardScatterParticles.size() < 1 ) return 0;
 
-    // find a D* meson or other charmed mesons
-    int nDStarMesons = 0;
-    reco::GenParticle dstar;
-    bool hasOtherCharmedMeson = false;
+    // initialize result
+    int res = 99;
+
+    // loop over hard scattering particles
     for( const reco::GenParticle* p : hardScatterParticles ){
+
+        // check if it is a charmed hadron
         int pdgid = p->pdgId();
-        if(std::abs(pdgid) == 413){
-            nDStarMesons ++;
-            dstar = *p;
+        bool cMeson = (std::abs(pdgid) > 400 && std::abs(pdgid) < 500);
+        bool cBaryon = (std::abs(pdgid) > 4000 && std::abs(pdgid) < 5000);
+        if( !(cMeson || cBaryon) ) continue;
+        if(res > 4) res = 4;
+
+        // check if it is a D* meson
+        if(std::abs(pdgid) != 413) continue;
+        const reco::GenParticle* dstar = p;
+        if(res > 3) res = 3;
+
+        // find the decay products of the D* meson
+        std::vector<const reco::GenParticle*> dstarDaughters;
+        for(unsigned int i=0; i < dstar->numberOfDaughters(); ++i){
+            dstarDaughters.push_back( &genParticles[dstar->daughterRef(i).key()] );
         }
-        else if(std::abs(pdgid) > 400 || std::abs(pdgid) < 500){
-            hasOtherCharmedMeson = true;
+
+        // find if they are a D0 meson and a pion
+        if( dstarDaughters.size()!=2 ) continue;
+        const reco::GenParticle* dzero;
+        if( std::abs(dstarDaughters.at(0)->pdgId())==421
+            && std::abs(dstarDaughters.at(1)->pdgId())==211 ){
+            dzero = dstarDaughters.at(0);
+        } else if( std::abs(dstarDaughters.at(0)->pdgId())==211
+            && std::abs(dstarDaughters.at(1)->pdgId())==421 ){
+            dzero = dstarDaughters.at(1);
+        } else continue;
+        if(res > 2) res = 2;
+
+        // find the daughters of the D0
+        std::vector<const reco::GenParticle*> dzeroDaughters;
+        for(unsigned int i=0; i < dzero->numberOfDaughters(); ++i){
+            dzeroDaughters.push_back( &genParticles[dzero->daughterRef(i).key()] );
         }
+
+        // find if they are a kaon and a pion
+        if( dzeroDaughters.size()!=2 ) continue;
+        if( std::abs(dzeroDaughters.at(0)->pdgId())==321
+            && std::abs(dzeroDaughters.at(1)->pdgId())==211 ){
+            // pass
+        } else if( std::abs(dzeroDaughters.at(0)->pdgId())==211
+            && std::abs(dzeroDaughters.at(1)->pdgId())==321 ){
+            // pass
+        } else continue;
+
+        // if all checks above succeeded,
+        // we have a genuine D* -> D0 pi -> K pi pi event
+        if(res > 1) res = 1;
+        break;
     }
-
-    // handle case of multiple Ds mesons
-    if( nDStarMesons > 1 ) return 4;
-    
-    // handle case of no Ds mesons
-    if( nDStarMesons == 0 ){
-        if( hasOtherCharmedMeson ) return 10;
-        else return 0;
-    }
-
-    // find the decay products of the DStar meson
-    std::vector<const reco::GenParticle*> dstarDaughters;
-    for(unsigned int i=0; i < dstar.numberOfDaughters(); ++i){
-        dstarDaughters.push_back( &genParticles[dstar.daughterRef(i).key()] );
-    }
-
-    // find if they are a D0 meson and a pion
-    if( dstarDaughters.size()!=2 ) return 3;
-    const reco::GenParticle* dzero;
-    if( std::abs(dstarDaughters.at(0)->pdgId())==421
-        && std::abs(dstarDaughters.at(1)->pdgId())==211 ){
-        dzero = dstarDaughters.at(0);
-    } else if( std::abs(dstarDaughters.at(0)->pdgId())==211
-        && std::abs(dstarDaughters.at(1)->pdgId())==421 ){
-        dzero = dstarDaughters.at(1);
-    } else return 3;
-
-    // find the daughters of the D0
-    std::vector<const reco::GenParticle*> dzeroDaughters;
-    for(unsigned int i=0; i < dzero->numberOfDaughters(); ++i){
-        dzeroDaughters.push_back( &genParticles[dzero->daughterRef(i).key()] );
-    }
-
-    // find if they are a kaon and a pion
-    if( dzeroDaughters.size()!=2 ) return 2;
-    if( std::abs(dzeroDaughters.at(0)->pdgId())==321
-        && std::abs(dzeroDaughters.at(1)->pdgId())==211 ){
-        // pass
-    } else if( std::abs(dzeroDaughters.at(0)->pdgId())==211
-        && std::abs(dzeroDaughters.at(1)->pdgId())==321 ){
-        // pass
-    } else return 2;
-
-    // if all checks above succeeded,
-    // we have a genuine D* -> D0 pi -> K pi pi event
-    return 1;
+    if(res > 4) res = 0;
+    return res;
 }
 
 

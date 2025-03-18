@@ -43,6 +43,7 @@ HcAnalysis::HcAnalysis(const edm::ParameterSet& iConfig):
   dZeroMesonGenAnalyzer = new DZeroMesonGenAnalyzer(iConfig, this);
   dStarMesonAnalyzer = new DStarMesonAnalyzer(iConfig, this);
   dStarMesonGenAnalyzer = new DStarMesonGenAnalyzer(iConfig, this);
+  cfragmentationAnalyzer = new cFragmentationAnalyzer(iConfig, this);
   genParticlePrinter = new GenParticlePrinter(iConfig, this);
   higgsAnalyzer = new HiggsAnalyzer(iConfig, this);
 }
@@ -57,6 +58,7 @@ HcAnalysis::~HcAnalysis() {
   delete dZeroMesonGenAnalyzer;
   delete dStarMesonAnalyzer;
   delete dStarMesonGenAnalyzer;
+  delete cfragmentationAnalyzer;
   delete genParticlePrinter;
   delete higgsAnalyzer;
 }
@@ -77,6 +79,7 @@ void HcAnalysis::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup
   dZeroMesonGenAnalyzer->analyze(iEvent); // todo: disable for data
   dStarMesonAnalyzer->analyze(iEvent);
   dStarMesonGenAnalyzer->analyze(iEvent); // todo: disable for data
+  cfragmentationAnalyzer->analyze(iEvent); // todo: disable for data
   //genParticlePrinter->analyze(iEvent); // todo: disable for data and production
   higgsAnalyzer->analyze(iEvent);
 
@@ -99,6 +102,7 @@ void HcAnalysis::beginJob() {
   dZeroMesonGenAnalyzer->beginJob(outputTree);
   dStarMesonAnalyzer->beginJob(outputTree);
   dStarMesonGenAnalyzer->beginJob(outputTree);
+  cfragmentationAnalyzer->beginJob(outputTree);
   genParticlePrinter->beginJob(outputTree);
   higgsAnalyzer->beginJob(outputTree);
 

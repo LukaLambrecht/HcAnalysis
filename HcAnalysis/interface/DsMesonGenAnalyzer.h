@@ -45,8 +45,8 @@ class DsMesonGenAnalyzer {
 
     static const unsigned nGenDsMeson_max = 5;
 
-    int _genDsMesonDecayType = 0;
-    int _nGenDsMesonToKKPi = 0;
+    unsigned _genDsMesonDecayType = 0;
+    unsigned _nGenDsMesonToKKPi = 0;
 
     double _genDsMeson_Ds_pt[nGenDsMeson_max];
     double _genDsMeson_Ds_eta[nGenDsMeson_max];

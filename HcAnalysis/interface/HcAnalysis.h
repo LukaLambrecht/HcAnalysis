@@ -52,6 +52,7 @@
 #include "HcAnalysis/HcAnalysis/interface/DZeroMesonGenAnalyzer.h"
 #include "HcAnalysis/HcAnalysis/interface/DStarMesonAnalyzer.h"
 #include "HcAnalysis/HcAnalysis/interface/DStarMesonGenAnalyzer.h"
+#include "HcAnalysis/HcAnalysis/interface/cFragmentationAnalyzer.h"
 #include "HcAnalysis/HcAnalysis/interface/GenParticlePrinter.h"
 #include "HcAnalysis/HcAnalysis/interface/HiggsAnalyzer.h"
 
@@ -65,6 +66,7 @@ class DsMesonGenAnalyzer;
 class DZeroMesonGenAnalyzer;
 class DStarMesonAnalyzer;
 class DStarMesonGenAnalyzer;
+class cFragmentationAnalyzer;
 class GenParticlePrinter;
 class HiggsAnalyzer;
 
@@ -77,6 +79,7 @@ class HcAnalysis : public edm::one::EDAnalyzer<edm::one::WatchLuminosityBlocks, 
   friend DZeroMesonGenAnalyzer;
   friend DStarMesonAnalyzer;
   friend DStarMesonGenAnalyzer;
+  friend cFragmentationAnalyzer;
   friend GenParticlePrinter;
   friend HiggsAnalyzer;
 
@@ -112,6 +115,7 @@ class HcAnalysis : public edm::one::EDAnalyzer<edm::one::WatchLuminosityBlocks, 
     DZeroMesonGenAnalyzer* dZeroMesonGenAnalyzer;
     DStarMesonAnalyzer* dStarMesonAnalyzer;
     DStarMesonGenAnalyzer* dStarMesonGenAnalyzer;
+    cFragmentationAnalyzer* cfragmentationAnalyzer;
     GenParticlePrinter* genParticlePrinter;
     HiggsAnalyzer* higgsAnalyzer;
 

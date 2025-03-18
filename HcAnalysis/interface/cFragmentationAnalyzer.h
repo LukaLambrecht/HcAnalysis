@@ -1,19 +1,12 @@
 /*
-Custom analyzer class for investigating gen-level D0 meson decays.
+Custom analyzer class for investigating c-quark fragmentation.
 */
 
-#ifndef DZEROGEN_ANALYZER_H
-#define DZEROGEN_ANALYZER_H
+#ifndef CFRAGMENTATION_ANALYZER_H
+#define CFRAGMENTATION_ANALYZER_H
 
 // include other parts of the framework
 #include "HcAnalysis/HcAnalysis/interface/HcAnalysis.h"
-
-// system include files
-#include <memory>
-#include <unordered_map>
-
-// root classes
-#include <Math/Vector4D.h>
 
 // main include files
 #include "FWCore/Framework/interface/Frameworkfwd.h"
@@ -29,33 +22,25 @@ Custom analyzer class for investigating gen-level D0 meson decays.
 #include "TTree.h"
 #include "FWCore/ServiceRegistry/interface/Service.h"
 #include "CommonTools/UtilAlgos/interface/TFileService.h"
-#include "DataFormats/Math/interface/deltaR.h"
-
-// dataformats include files
-#include "DataFormats/Math/interface/LorentzVector.h"
 
 
 class HcAnalysis;
 
-class DZeroMesonGenAnalyzer {
+class cFragmentationAnalyzer {
   friend class HcAnalysis;
   private:
 
     HcAnalysis* hcAnalyzer;
 
-    unsigned _nGenDZeroMesonToKPi = 0;
-    unsigned _genDZeroMesonDecayType = 0;
+    int _cFragmentationPdgId = 0;
+    int _cBarFragmentationPdgId = 0;
 
   public:
-    DZeroMesonGenAnalyzer(const edm::ParameterSet& iConfig, HcAnalysis* vars);
-    ~DZeroMesonGenAnalyzer();
+    cFragmentationAnalyzer(const edm::ParameterSet& iConfig, HcAnalysis* vars);
+    ~cFragmentationAnalyzer();
     // template member functions
     void beginJob(TTree*);
     void analyze(const edm::Event&);
-
-    static int find_DZero_decay_type(const std::vector<reco::GenParticle>&);
-    static std::vector< std::map< std::string, const reco::GenParticle* > > find_DZero_to_KPi(
-      const std::vector<reco::GenParticle>&);
 };
 
 #endif
