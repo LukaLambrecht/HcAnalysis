@@ -2,7 +2,7 @@
 {
   "name": "genDStarMeson_Pi1_pt",
   "variable": "genDStarMeson_Pi1_pt",
-  "axtitle": "First pion p_{T}",
+  "axtitle": "First pion $p_{T}$",
   "unit": "GeV",
   "xlow": 0.0,
   "xhigh": 3.0,
@@ -11,7 +11,7 @@
 { 
   "name": "genDStarMeson_K_pt",
   "variable": "genDStarMeson_K_pt",
-  "axtitle": "Kaon p_{T}",
+  "axtitle": "Kaon $p_{T}$",
   "unit": "GeV",
   "xlow": 0.0,
   "xhigh": 30.0,
@@ -20,7 +20,7 @@
 { 
   "name": "genDStarMeson_Pi2_pt",
   "variable": "genDStarMeson_Pi2_pt",
-  "axtitle": "Second pion p_{T}",
+  "axtitle": "Second pion $p_{T}$",
   "unit": "GeV",
   "xlow": 0.0,
   "xhigh": 30.0,

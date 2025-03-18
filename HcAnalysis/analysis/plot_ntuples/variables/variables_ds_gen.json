@@ -2,7 +2,7 @@
 {
   "name": "genDsMeson_Pi_pt",
   "variable": "genDsMeson_Pi_pt",
-  "axtitle": "Pion p_{T}",
+  "axtitle": "Pion $p_{T}$",
   "unit": "GeV",
   "xlow": 0.0,
   "xhigh": 20.0,
@@ -11,7 +11,7 @@
 { 
   "name": "genDsMeson_KPlus_pt",
   "variable": "genDsMeson_KPlus_pt",
-  "axtitle": "K^{+} p_{T}",
+  "axtitle": "$K^{+}$ $p_{T}$",
   "unit": "GeV",
   "xlow": 0.0,
   "xhigh": 10.0,
@@ -20,7 +20,7 @@
 { 
   "name": "genDsMeson_KMinus_pt",
   "variable": "genDsMeson_KMinus_pt",
-  "axtitle": "K^{-} p_{T}",
+  "axtitle": "$K^{-}$ $p_{T}$",
   "unit": "GeV",
   "xlow": 0.0,
   "xhigh": 10.0,
