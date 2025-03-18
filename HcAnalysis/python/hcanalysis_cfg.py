@@ -23,11 +23,11 @@ elif inputfile.startswith('/store/'):
 else:
     inputfile = os.path.abspath(inputfile)
     inputfile = f'file:{inputfile}'
+print(f'Using parsed input file name: {inputfile}')
 
 # set input file and number of events to process
 # (note: use -1 to process all events in the input file)
-inputfile = os.path.abspath(sys.argv[1])
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1000) )
 process.source = cms.Source("PoolSource",
         fileNames = cms.untracked.vstring(inputfile)
 )
