@@ -1,0 +1,29 @@
+[
+{
+  "name": "genDsMesonDecayType",
+  "variable": "genDsMesonDecayType",
+  "axtitle": "Gen-level Ds meson decay type",
+  "unit": "",
+  "xlow": -0.5,
+  "xhigh": 10.5,
+  "nbins": 11
+},
+{ 
+  "name": "genDZeroMesonDecayType",
+  "variable": "genDZeroMesonDecayType",
+  "axtitle": "Gen-level D0 meson decay type",
+  "unit": "",
+  "xlow": -0.5,
+  "xhigh": 10.5,
+  "nbins": 11
+},
+{ 
+  "name": "genDStarMesonDecayType",
+  "variable": "genDStarMesonDecayType",
+  "axtitle": "Gen-level D* meson decay type",
+  "unit": "",
+  "xlow": -0.5,
+  "xhigh": 10.5,
+  "nbins": 11
+}
+]

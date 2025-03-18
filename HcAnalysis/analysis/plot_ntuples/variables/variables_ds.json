@@ -1,0 +1,20 @@
+[
+{
+  "name": "DsMeson_mass",
+  "variable": "DsMeson_mass",
+  "axtitle": "Reconstructed m(Ds)",
+  "unit": "GeV",
+  "xlow": 1.86,
+  "xhigh": 2.07,
+  "nbins": 50
+},
+{
+  "name": "DsMeson_PhiMeson_mass",
+  "variable": "DsMeson_PhiMeson_mass",
+  "axtitle": "Reconstructed m(Phi)",
+  "unit": "GeV",
+  "xlow": 0.98,
+  "xhigh": 1.09,
+  "nbins": 50
+}
+]

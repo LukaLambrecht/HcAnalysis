@@ -1,0 +1,6 @@
+# ignore compiled python code
+**.pyc
+**__pycache*
+
+# ignore output
+**output_*
