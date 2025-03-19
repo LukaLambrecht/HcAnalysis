@@ -15,8 +15,8 @@ DZeroMesonGenAnalyzer::~DZeroMesonGenAnalyzer(){
 
 // beginJob //
 void DZeroMesonGenAnalyzer::beginJob(TTree* outputTree){
-    outputTree->Branch("nGenDZeroMesonToKPi", &_nGenDZeroMesonToKPi, "nGenDZeroMesonToKPi/i");
     outputTree->Branch("genDZeroMesonDecayType", &_genDZeroMesonDecayType, "genDZeroMesonDecayType/i");
+    outputTree->Branch("nGenDZeroMesonToKPi", &_nGenDZeroMesonToKPi, "nGenDZeroMesonToKPi/i");
 }
 
 // analyze (main method) //

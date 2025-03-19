@@ -4,3 +4,6 @@
 
 # ignore output
 **output_*
+
+# ignore user proxy
+**x509up*
