@@ -18,7 +18,7 @@ if __name__=='__main__':
         'extrainfo': None
       },
       'Ds': {
-        'variables': 'variables/variables_ds.json',
+        'variables': 'variables/variables_ds_selection.json',
         'genmatchbranch': 'DsMeson_hasFastGenMatch',
         'outputdir': 'Ds',
         'extrainfo': r"'$D_{s} \rightarrow \phi \pi \rightarrow K K \pi$'"
@@ -30,7 +30,7 @@ if __name__=='__main__':
         'extrainfo': r"'$D_{s} \rightarrow \phi \pi \rightarrow K K \pi$'"
       },
       'DStar': {
-        'variables': 'variables/variables_dstar.json',
+        'variables': 'variables/variables_dstar_selection.json',
         'genmatchbranch': 'DStarMeson_hasFastGenMatch',
         'outputdir': 'DStar',
         'extrainfo': r"'$D* \rightarrow D^{0} \pi \rightarrow K \pi \pi$'"
@@ -43,7 +43,7 @@ if __name__=='__main__':
       }
     }
 
-    inputfile = '../../python/output_20250318/output_test.root' # to replace with cmd line arg
+    inputfile = '../../python/output_test/output_test.root' # to replace with cmd line arg
     outputdir = 'output_test' # to replace with cmd line arg
 
     for key, config in configs.items():

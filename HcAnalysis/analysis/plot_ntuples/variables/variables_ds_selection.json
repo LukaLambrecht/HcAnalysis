@@ -11,7 +11,7 @@
 {
   "name": "DsMeson_PhiMeson_mass",
   "variable": "DsMeson_PhiMeson_mass",
-  "axtitle": "Reconstructed $m(\phi)$",
+  "axtitle": "Reconstructed $m(\\phi)$",
   "unit": "GeV",
   "xlow": 0.98,
   "xhigh": 1.09,
@@ -20,7 +20,7 @@
 {
   "name": "DsMeson_PhiMeson_massDiff",
   "variable": "DsMeson_PhiMeson_massDiff",
-  "axtitle": "Reconstructed $m(D_{s}) - m(\phi)$",
+  "axtitle": "Reconstructed $m(D_{s}) - m(\\phi)$",
   "unit": "GeV",
   "xlow": 0.75,
   "xhigh": 1.1,
@@ -29,7 +29,7 @@
 {
   "name": "DsMeson_Pi_pt",
   "variable": "DsMeson_Pi_pt",
-  "axtitle": "$p_{T}(\pi)",
+  "axtitle": "$p_{T}(\\pi)$",
   "unit": "GeV",
   "xlow": 0.0,
   "xhigh": 10.0,
@@ -38,7 +38,7 @@
 {
   "name": "DsMeson_KPlus_pt",
   "variable": "DsMeson_KPlus_pt",
-  "axtitle": "$p_{T}(K^{+})",
+  "axtitle": "$p_{T}(K^{+})$",
   "unit": "GeV",
   "xlow": 0.0,
   "xhigh": 5.0,
@@ -47,7 +47,7 @@
 {
   "name": "DsMeson_KMinus_pt",
   "variable": "DsMeson_KMinus_pt",
-  "axtitle": "$p_{T}(K^{-})",
+  "axtitle": "$p_{T}(K^{-})$",
   "unit": "GeV",
   "xlow": 0.0,
   "xhigh": 5.0,
@@ -56,7 +56,7 @@
 {
   "name": "DsMeson_tr1tr2_deltaR",
   "variable": "DsMeson_tr1tr2_deltaR",
-  "axtitle": "$\Delta$ R (track 1, track 2)",
+  "axtitle": "$\\Delta$ R (track 1, track 2)",
   "unit": "",
   "xlow": 0.0,
   "xhigh": 0.4,
@@ -65,7 +65,7 @@
 {
   "name": "DsMeson_tr3phi_deltaR",
   "variable": "DsMeson_tr3phi_deltaR",
-  "axtitle": "$\Delta$ R (track 3, \phi)",
+  "axtitle": "$\\Delta$ R (track 3, $\\phi$)",
   "unit": "",
   "xlow": 0.0,
   "xhigh": 0.4,
@@ -74,7 +74,7 @@
 {
   "name": "DsMeson_phivtx_normchi2",
   "variable": "DsMeson_phivtx_normchi2",
-  "axtitle": "$\phi$-vertex normalized $\chi^2$",
+  "axtitle": "$\\phi$-vertex normalized $\\chi^2$",
   "unit": "",
   "xlow": 0.0,
   "xhigh": 5.0,
@@ -83,7 +83,7 @@
 {
   "name": "DsMeson_dsvtx_normchi2",
   "variable": "DsMeson_dsvtx_normchi2",
-  "axtitle": "$D_{s}$-vertex normalized $\chi^2$",
+  "axtitle": "$D_{s}$-vertex normalized $\\chi^2$",
   "unit": "",
   "xlow": 0.0,
   "xhigh": 5.0,
@@ -92,7 +92,7 @@
 {
   "name": "DsMeson_tr1tr2_sepx",
   "variable": "DsMeson_tr1tr2_sepx",
-  "axtitle": "$\Delta x$ (track 1, track 2)",
+  "axtitle": "$\\Delta x$ (track 1, track 2)",
   "unit": "",
   "xlow": 0.0,
   "xhigh": 0.04,
@@ -101,7 +101,7 @@
 {
   "name": "DsMeson_tr1tr2_sepy",
   "variable": "DsMeson_tr1tr2_sepy",
-  "axtitle": "$\Delta y$ (track 1, track 2)",
+  "axtitle": "$\\Delta y$ (track 1, track 2)",
   "unit": "",
   "xlow": 0.0,
   "xhigh": 0.04,
@@ -110,7 +110,7 @@
 {
   "name": "DsMeson_tr1tr2_sepz",
   "variable": "DsMeson_tr1tr2_sepz",
-  "axtitle": "$\Delta z$ (track 1, track 2)",
+  "axtitle": "$\\Delta z$ (track 1, track 2)",
   "unit": "",
   "xlow": 0.0,
   "xhigh": 0.1,
@@ -119,7 +119,7 @@
 {
   "name": "DsMeson_tr3phi_sepx",
   "variable": "DsMeson_tr3phi_sepx",
-  "axtitle": "$\Delta x$ (track 3, \phi)",
+  "axtitle": "$\\Delta x$ (track 3, $\\phi$)",
   "unit": "",
   "xlow": 0.0,
   "xhigh": 0.1,
@@ -128,7 +128,7 @@
 {
   "name": "DsMeson_tr3phi_sepy",
   "variable": "DsMeson_tr3phi_sepy",
-  "axtitle": "$\Delta y$ (track 3, \phi)",
+  "axtitle": "$\\Delta y$ (track 3, $\\phi$)",
   "unit": "",
   "xlow": 0.0,
   "xhigh": 0.1,
@@ -137,7 +137,7 @@
 {
   "name": "DsMeson_tr3phi_sepz",
   "variable": "DsMeson_tr3phi_sepz",
-  "axtitle": "$\Delta z$ (track 3, \phi)",
+  "axtitle": "$\\Delta z$ (track 3, $\\phi$)",
   "unit": "",
   "xlow": 0.0,
   "xhigh": 0.1,

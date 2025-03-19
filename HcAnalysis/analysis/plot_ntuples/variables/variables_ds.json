@@ -11,7 +11,7 @@
 {
   "name": "DsMeson_PhiMeson_mass",
   "variable": "DsMeson_PhiMeson_mass",
-  "axtitle": "Reconstructed $m(\phi)$",
+  "axtitle": "Reconstructed $m(\\phi)$",
   "unit": "GeV",
   "xlow": 0.98,
   "xhigh": 1.09,
@@ -20,7 +20,7 @@
 {
   "name": "DsMeson_PhiMeson_massDiff",
   "variable": "DsMeson_PhiMeson_massDiff",
-  "axtitle": "Reconstructed $m(D_{s}) - m(\phi)$",
+  "axtitle": "Reconstructed $m(D_{s}) - m(\\phi)$",
   "unit": "GeV",
   "xlow": ,
   "xhigh": ,
