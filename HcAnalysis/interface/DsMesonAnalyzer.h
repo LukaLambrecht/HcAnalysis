@@ -87,6 +87,26 @@ class DsMesonAnalyzer {
     double _DsMeson_PhiMeson_pt[nDsMeson_max];
     double _DsMeson_PhiMeson_eta[nDsMeson_max];
     double _DsMeson_PhiMeson_phi[nDsMeson_max];
+    double _DsMeson_PhiMeson_massDiff[nDsMeson_max];
+    double _DsMeson_Pi_pt[nDsMeson_max];
+    double _DsMeson_Pi_eta[nDsMeson_max];
+    double _DsMeson_Pi_phi[nDsMeson_max];
+    double _DsMeson_KPlus_pt[nDsMeson_max];
+    double _DsMeson_KPlus_eta[nDsMeson_max];
+    double _DsMeson_KPlus_phi[nDsMeson_max];
+    double _DsMeson_KMinus_pt[nDsMeson_max];
+    double _DsMeson_KMinus_eta[nDsMeson_max];
+    double _DsMeson_KMinus_phi[nDsMeson_max];
+    double _DsMeson_tr1tr2_deltaR[nDsMeson_max];
+    double _DsMeson_tr3phi_deltaR[nDsMeson_max];
+    double _DsMeson_phivtx_normchi2[nDsMeson_max];
+    double _DsMeson_dsvtx_normchi2[nDsMeson_max];
+    double _DsMeson_tr1tr2_sepx[nDsMeson_max];
+    double _DsMeson_tr1tr2_sepy[nDsMeson_max];
+    double _DsMeson_tr1tr2_sepz[nDsMeson_max];
+    double _DsMeson_tr3phi_sepx[nDsMeson_max];
+    double _DsMeson_tr3phi_sepy[nDsMeson_max];
+    double _DsMeson_tr3phi_sepz[nDsMeson_max];
 
   public:
     DsMesonAnalyzer(const edm::ParameterSet& iConfig, HcAnalysis* vars);

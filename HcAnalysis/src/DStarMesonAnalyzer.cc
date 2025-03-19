@@ -31,6 +31,25 @@ void DStarMesonAnalyzer::beginJob(TTree* outputTree){
     outputTree->Branch("DStarMeson_DZeroMeson_eta", &_DStarMeson_DZeroMeson_eta, "DStarMeson_DZeroMeson_eta[nDStarMeson]/D");
     outputTree->Branch("DStarMeson_DZeroMeson_phi", &_DStarMeson_DZeroMeson_phi, "DStarMeson_DZeroMeson_phi[nDStarMeson]/D");
     outputTree->Branch("DStarMeson_DZeroMeson_massDiff", &_DStarMeson_DZeroMeson_massDiff, "DStarMeson_DZeroMeson_massDiff[nDStarMeson]/D");
+    outputTree->Branch("DStarMeson_Pi1_pt", &_DStarMeson_Pi1_pt, "DStarMeson_Pi1_pt[nDStarMeson]/D");
+    outputTree->Branch("DStarMeson_Pi1_eta", &_DStarMeson_Pi1_eta, "DStarMeson_Pi1_eta[nDStarMeson]/D");
+    outputTree->Branch("DStarMeson_Pi1_phi", &_DStarMeson_Pi1_phi, "DStarMeson_Pi1_phi[nDStarMeson]/D");
+    outputTree->Branch("DStarMeson_K_pt", &_DStarMeson_K_pt, "DStarMeson_K_pt[nDStarMeson]/D");
+    outputTree->Branch("DStarMeson_K_eta", &_DStarMeson_K_eta, "DStarMeson_K_eta[nDStarMeson]/D");
+    outputTree->Branch("DStarMeson_K_phi", &_DStarMeson_K_phi, "DStarMeson_K_phi[nDStarMeson]/D");
+    outputTree->Branch("DStarMeson_Pi2_pt", &_DStarMeson_Pi2_pt, "DStarMeson_Pi2_pt[nDStarMeson]/D");
+    outputTree->Branch("DStarMeson_Pi2_eta", &_DStarMeson_Pi2_eta, "DStarMeson_Pi2_eta[nDStarMeson]/D");
+    outputTree->Branch("DStarMeson_Pi2_phi", &_DStarMeson_Pi2_phi, "DStarMeson_Pi2_phi[nDStarMeson]/D");
+    outputTree->Branch("DStarMeson_tr1tr2_deltaR", &_DStarMeson_tr1tr2_deltaR, "DStarMeson_tr1tr2_deltaR[nDStarMeson]/D");
+    outputTree->Branch("DStarMeson_tr3d0_deltaR", &_DStarMeson_tr3d0_deltaR, "DStarMeson_tr3d0_deltaR[nDStarMeson]/D");
+    outputTree->Branch("DStarMeson_d0vtx_normchi2", &_DStarMeson_d0vtx_normchi2, "DStarMeson_d0vtx_normchi2[nDStarMeson]/D");
+    outputTree->Branch("DStarMeson_dstarvtx_normchi2", &_DStarMeson_dstarvtx_normchi2, "DStarMeson_dstarvtx_normchi2[nDStarMeson]/D");
+    outputTree->Branch("DStarMeson_tr1tr2_sepx", &_DStarMeson_tr1tr2_sepx, "DStarMeson_tr1tr2_sepx[nDStarMeson]/D");
+    outputTree->Branch("DStarMeson_tr1tr2_sepy", &_DStarMeson_tr1tr2_sepy, "DStarMeson_tr1tr2_sepy[nDStarMeson]/D");
+    outputTree->Branch("DStarMeson_tr1tr2_sepz", &_DStarMeson_tr1tr2_sepz, "DStarMeson_tr1tr2_sepz[nDStarMeson]/D");
+    outputTree->Branch("DStarMeson_tr3d0_sepx", &_DStarMeson_tr3d0_sepx, "DStarMeson_tr3d0_sepx[nDStarMeson]/D");
+    outputTree->Branch("DStarMeson_tr3d0_sepy", &_DStarMeson_tr3d0_sepy, "DStarMeson_tr3d0_sepy[nDStarMeson]/D");
+    outputTree->Branch("DStarMeson_tr3d0_sepz", &_DStarMeson_tr3d0_sepz, "DStarMeson_tr3d0_sepz[nDStarMeson]/D");
 }
 
 // analyze (main method) //
@@ -74,7 +93,7 @@ void DStarMesonAnalyzer::analyze(const edm::Event& iEvent){
     std::vector<reco::Track> selectedTracks;
     for(const reco::Track& track: allTracks){
         if(!track.quality(reco::TrackBase::qualityByName("highPurity"))) continue;
-        if(track.pt() < 0.35) continue;
+        if(track.pt() < 0.3) continue;
 	    selectedTracks.push_back(track);
     }
 
@@ -113,24 +132,15 @@ void DStarMesonAnalyzer::analyze(const edm::Event& iEvent){
         } else continue; // should not normally happen but just for safety
 
         // make invariant mass
-        // assumption 1: positive track is a kaon, negative one a pion
-        ROOT::Math::PtEtaPhiMVector posP4k(postrack.pt(), postrack.eta(), postrack.phi(), kmass);
-        ROOT::Math::PtEtaPhiMVector negP4pi(negtrack.pt(), negtrack.eta(), negtrack.phi(), pimass);
-        double kPiInvMass = (posP4k + negP4pi).M();
-        // assumption 2: positive track is a pion, negative one a pion
-        ROOT::Math::PtEtaPhiMVector posP4pi(postrack.pt(), postrack.eta(), postrack.phi(), pimass);
-        ROOT::Math::PtEtaPhiMVector negP4k(negtrack.pt(), negtrack.eta(), negtrack.phi(), kmass);
-        double piKInvMass = (posP4pi + negP4k).M();
+        // (note: we can safely assume the negative track is a kaon, and the positive one a pion,
+        //  as the opposite case has a negligible branching fraction)
+        ROOT::Math::PtEtaPhiMVector pi2P4(postrack.pt(), postrack.eta(), postrack.phi(), pimass);
+        ROOT::Math::PtEtaPhiMVector KP4(negtrack.pt(), negtrack.eta(), negtrack.phi(), kmass);
+        ROOT::Math::PtEtaPhiMVector dzeroP4 = pi2P4 + KP4;
+        double dzeroInvMass = dzeroP4.M();
         
         // invariant mass must be close to resonance mass
-        ROOT::Math::PtEtaPhiMVector dzeroP4( 0, 0, 0, 0 );
-        if( std::abs(kPiInvMass - dzeromass) < 0.035
-            && std::abs(kPiInvMass - dzeromass) < std::abs(piKInvMass - dzeromass) ){
-            dzeroP4 = posP4k + negP4pi;
-        } else if( std::abs(piKInvMass - dzeromass)<0.035
-            && std::abs(piKInvMass - dzeromass) < std::abs(kPiInvMass - dzeromass) ){
-            dzeroP4 = posP4pi + negP4k;
-        } else continue;
+        if( std::abs(dzeroInvMass - dzeromass) > 0.035 ) continue;
 
         // fit a vertex
         std::vector<reco::TransientTrack> transpair;
@@ -141,7 +151,7 @@ void DStarMesonAnalyzer::analyze(const edm::Event& iEvent){
         // vertex must be valid
         if(!dzerovtx.isValid()) continue;
         // chi squared of fit must be small
-        if(dzerovtx.normalisedChiSquared()>15.) continue;
+        if(dzerovtx.normalisedChiSquared()>5.) continue;
         if(dzerovtx.normalisedChiSquared()<0.) continue;
         
         // loop over third track
@@ -160,8 +170,8 @@ void DStarMesonAnalyzer::analyze(const edm::Event& iEvent){
             if( trackvtxsepx>0.1 || trackvtxsepy>0.1 || trackvtxsepz>0.1 ) continue;
 
             // make invariant mass (under the assumption of pi mass for the third track)
-            ROOT::Math::PtEtaPhiMVector thirdP4(tr3.pt(), tr3.eta(), tr3.phi(), pimass);
-            ROOT::Math::PtEtaPhiMVector dstarP4 = dzeroP4 + thirdP4;
+            ROOT::Math::PtEtaPhiMVector pi1P4(tr3.pt(), tr3.eta(), tr3.phi(), pimass);
+            ROOT::Math::PtEtaPhiMVector dstarP4 = dzeroP4 + pi1P4;
             double dstarInvMass = dstarP4.M();
 
             // check if mass is close enough to D* mass
@@ -172,12 +182,12 @@ void DStarMesonAnalyzer::analyze(const edm::Event& iEvent){
             transtriplet.push_back(reco::TransientTrack(tr1, bfield));
             transtriplet.push_back(reco::TransientTrack(tr2, bfield));
             transtriplet.push_back(reco::TransientTrack(tr3, bfield));
-            TransientVertex dsvtx = vtxFitter.vertex(transtriplet);
-            if(!dsvtx.isValid()) continue;
-            if(dsvtx.normalisedChiSquared()>5.) continue;
-            if(dsvtx.normalisedChiSquared()<0.) continue;
+            TransientVertex dstarvtx = vtxFitter.vertex(transtriplet);
+            if(!dstarvtx.isValid()) continue;
+            if(dstarvtx.normalisedChiSquared()>5.) continue;
+            if(dstarvtx.normalisedChiSquared()<0.) continue;
 
-            // set properties of the Ds candidate
+            // set properties of the D* candidate
             _DStarMeson_mass[_nDStarMeson] = dstarP4.M();
             _DStarMeson_pt[_nDStarMeson] = dstarP4.pt();
             _DStarMeson_eta[_nDStarMeson] = dstarP4.eta();
@@ -187,7 +197,26 @@ void DStarMesonAnalyzer::analyze(const edm::Event& iEvent){
             _DStarMeson_DZeroMeson_eta[_nDStarMeson] = dzeroP4.eta();
             _DStarMeson_DZeroMeson_phi[_nDStarMeson] = dzeroP4.phi();
             _DStarMeson_DZeroMeson_massDiff[_nDStarMeson] = dstarP4.M() - dzeroP4.M();
-           
+            _DStarMeson_Pi1_pt[_nDStarMeson] = pi1P4.pt();
+            _DStarMeson_Pi1_eta[_nDStarMeson] = pi1P4.eta();
+            _DStarMeson_Pi1_phi[_nDStarMeson] = pi1P4.phi();
+            _DStarMeson_K_pt[_nDStarMeson] = KP4.pt();
+            _DStarMeson_K_eta[_nDStarMeson] = KP4.eta();
+            _DStarMeson_K_phi[_nDStarMeson] = KP4.phi();
+            _DStarMeson_Pi2_pt[_nDStarMeson] = pi2P4.pt();
+            _DStarMeson_Pi2_eta[_nDStarMeson] = pi2P4.eta();
+            _DStarMeson_Pi2_phi[_nDStarMeson] = pi2P4.phi();
+            _DStarMeson_tr1tr2_deltaR[_nDStarMeson] = reco::deltaR(tr1, tr2);
+            _DStarMeson_tr3d0_deltaR[_nDStarMeson] = reco::deltaR(tr3, dzeroP4);
+            _DStarMeson_d0vtx_normchi2[_nDStarMeson] = dzerovtx.normalisedChiSquared();
+            _DStarMeson_dstarvtx_normchi2[_nDStarMeson] = dstarvtx.normalisedChiSquared();
+            _DStarMeson_tr1tr2_sepx[_nDStarMeson] = twotracksepx;
+            _DStarMeson_tr1tr2_sepy[_nDStarMeson] = twotracksepy;
+            _DStarMeson_tr1tr2_sepz[_nDStarMeson] = twotracksepz;
+            _DStarMeson_tr3d0_sepx[_nDStarMeson] = trackvtxsepx;
+            _DStarMeson_tr3d0_sepy[_nDStarMeson] = trackvtxsepy;
+            _DStarMeson_tr3d0_sepz[_nDStarMeson] = trackvtxsepz;            
+
             // check if this candidate can be matched to gen-level
             _DStarMeson_hasFastGenMatch[_nDStarMeson] = false;
             _DStarMeson_hasFastGenMatch[_nDStarMeson] = false;

@@ -86,6 +86,25 @@ class DStarMesonAnalyzer {
     double _DStarMeson_DZeroMeson_eta[nDStarMeson_max];
     double _DStarMeson_DZeroMeson_phi[nDStarMeson_max];
     double _DStarMeson_DZeroMeson_massDiff[nDStarMeson_max];
+    double _DStarMeson_Pi1_pt[nDStarMeson_max];
+    double _DStarMeson_Pi1_eta[nDStarMeson_max];
+    double _DStarMeson_Pi1_phi[nDStarMeson_max];
+    double _DStarMeson_K_pt[nDStarMeson_max];
+    double _DStarMeson_K_eta[nDStarMeson_max];
+    double _DStarMeson_K_phi[nDStarMeson_max];
+    double _DStarMeson_Pi2_pt[nDStarMeson_max];
+    double _DStarMeson_Pi2_eta[nDStarMeson_max];
+    double _DStarMeson_Pi2_phi[nDStarMeson_max];
+    double _DStarMeson_tr1tr2_deltaR[nDStarMeson_max];
+    double _DStarMeson_tr3d0_deltaR[nDStarMeson_max];
+    double _DStarMeson_d0vtx_normchi2[nDStarMeson_max];
+    double _DStarMeson_dstarvtx_normchi2[nDStarMeson_max];
+    double _DStarMeson_tr1tr2_sepx[nDStarMeson_max];
+    double _DStarMeson_tr1tr2_sepy[nDStarMeson_max];
+    double _DStarMeson_tr1tr2_sepz[nDStarMeson_max];
+    double _DStarMeson_tr3d0_sepx[nDStarMeson_max];
+    double _DStarMeson_tr3d0_sepy[nDStarMeson_max];
+    double _DStarMeson_tr3d0_sepz[nDStarMeson_max];
 
   public:
     DStarMesonAnalyzer(const edm::ParameterSet& iConfig, HcAnalysis* vars);

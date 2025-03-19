@@ -30,6 +30,26 @@ void DsMesonAnalyzer::beginJob(TTree* outputTree){
     outputTree->Branch("DsMeson_PhiMeson_pt", &_DsMeson_PhiMeson_pt, "DsMeson_PhiMeson_pt[nDsMeson]/D");
     outputTree->Branch("DsMeson_PhiMeson_eta", &_DsMeson_PhiMeson_eta, "DsMeson_PhiMeson_eta[nDsMeson]/D");
     outputTree->Branch("DsMeson_PhiMeson_phi", &_DsMeson_PhiMeson_phi, "DsMeson_PhiMeson_phi[nDsMeson]/D");
+    outputTree->Branch("DsMeson_PhiMeson_massDiff", &_DsMeson_PhiMeson_massDiff, "DsMeson_PhiMeson_massDiff[nDsMeson]/D");
+    outputTree->Branch("DsMeson_Pi_pt", &_DsMeson_Pi_pt, "DsMeson_Pi_pt[nDsMeson]/D");
+    outputTree->Branch("DsMeson_Pi_eta", &_DsMeson_Pi_eta, "DsMeson_Pi_eta[nDsMeson]/D");
+    outputTree->Branch("DsMeson_Pi_phi", &_DsMeson_Pi_phi, "DsMeson_Pi_phi[nDsMeson]/D");
+    outputTree->Branch("DsMeson_KPlus_pt", &_DsMeson_KPlus_pt, "DsMeson_KPlus_pt[nDsMeson]/D");
+    outputTree->Branch("DsMeson_KPlus_eta", &_DsMeson_KPlus_eta, "DsMeson_KPlus_eta[nDsMeson]/D");
+    outputTree->Branch("DsMeson_KPlus_phi", &_DsMeson_KPlus_phi, "DsMeson_KPlus_phi[nDsMeson]/D");
+    outputTree->Branch("DsMeson_KMinus_pt", &_DsMeson_KMinus_pt, "DsMeson_KMinus_pt[nDsMeson]/D");
+    outputTree->Branch("DsMeson_KMinus_eta", &_DsMeson_KMinus_eta, "DsMeson_KMinus_eta[nDsMeson]/D");
+    outputTree->Branch("DsMeson_KMinus_phi", &_DsMeson_KMinus_phi, "DsMeson_KMinus_phi[nDsMeson]/D");
+    outputTree->Branch("DsMeson_tr1tr2_deltaR", &_DsMeson_tr1tr2_deltaR, "DsMeson_tr1tr2_deltaR[nDsMeson]/D");
+    outputTree->Branch("DsMeson_tr3phi_deltaR", &_DsMeson_tr3phi_deltaR, "DsMeson_tr3phi_deltaR[nDsMeson]/D");
+    outputTree->Branch("DsMeson_phivtx_normchi2", &_DsMeson_phivtx_normchi2, "DsMeson_phivtx_normchi2[nDsMeson]/D");
+    outputTree->Branch("DsMeson_dsvtx_normchi2", &_DsMeson_dsvtx_normchi2, "DsMeson_dsvtx_normchi2[nDsMeson]/D");
+    outputTree->Branch("DsMeson_tr1tr2_sepx", &_DsMeson_tr1tr2_sepx, "DsMeson_tr1tr2_sepx[nDsMeson]/D");
+    outputTree->Branch("DsMeson_tr1tr2_sepy", &_DsMeson_tr1tr2_sepy, "DsMeson_tr1tr2_sepy[nDsMeson]/D");
+    outputTree->Branch("DsMeson_tr1tr2_sepz", &_DsMeson_tr1tr2_sepz, "DsMeson_tr1tr2_sepz[nDsMeson]/D");
+    outputTree->Branch("DsMeson_tr3phi_sepx", &_DsMeson_tr3phi_sepx, "DsMeson_tr3phi_sepx[nDsMeson]/D");
+    outputTree->Branch("DsMeson_tr3phi_sepy", &_DsMeson_tr3phi_sepy, "DsMeson_tr3phi_sepy[nDsMeson]/D");
+    outputTree->Branch("DsMeson_tr3phi_sepz", &_DsMeson_tr3phi_sepz, "DsMeson_tr3phi_sepz[nDsMeson]/D");
 }
 
 // analyze (main method) //
@@ -73,7 +93,7 @@ void DsMesonAnalyzer::analyze(const edm::Event& iEvent){
     std::vector<reco::Track> selectedTracks;
     for(const reco::Track& track: allTracks){
         if(!track.quality(reco::TrackBase::qualityByName("highPurity"))) continue;
-        if(track.pt() < 0.5) continue;
+        if(track.pt() < 0.3) continue;
 	    selectedTracks.push_back(track);
     }
 
@@ -91,24 +111,6 @@ void DsMesonAnalyzer::analyze(const edm::Event& iEvent){
 
         // candidates must point approximately in the same direction
         if( reco::deltaR(tr1, tr2) > 0.4 ) continue;
-
-        // the following fragment applies some conditions on the point of closest approach,
-        // namely that the distance of closest approach must be reasonably small
-        // and that the point of closest approach must be situated not too far from the center of CMS.
-        // update: now replaced by a method using the track reference point below.
-        /*reco::TransientTrack trtr1(tr1, bfield);
-        reco::TransientTrack trtr2(tr2, bfield);
-        if(!trtr1.impactPointTSCP().isValid() or !trtr2.impactPointTSCP().isValid()) continue;
-        FreeTrajectoryState state1 = trtr1.impactPointTSCP().theState();
-        FreeTrajectoryState state2 = trtr2.impactPointTSCP().theState();
-        ClosestApproachInRPhi capp; capp.calculate(state1,state2);
-        if(!capp.status()) continue;
-        double dca = fabs(capp.distance());
-        if(dca < 0.) continue;
-        if(dca > 1.) continue;
-        GlobalPoint cxpt = capp.crossingPoint();
-        if(std::sqrt(cxpt.x()*cxpt.x() + cxpt.y()*cxpt.y())>10.
-            or std::abs(cxpt.z())>10.) continue;*/
 
         // reference points of both tracks must be close together
         const math::XYZPoint tr1refpoint = tr1.referencePoint();
@@ -130,9 +132,9 @@ void DsMesonAnalyzer::analyze(const edm::Event& iEvent){
         } else continue; // should not normally happen but just for safety
 
         // make invariant mass (under the assumption of K mass for both tracks)
-        ROOT::Math::PtEtaPhiMVector posP4(postrack.pt(), postrack.eta(), postrack.phi(), kmass);
-        ROOT::Math::PtEtaPhiMVector negP4(negtrack.pt(), negtrack.eta(), negtrack.phi(), kmass);
-        ROOT::Math::PtEtaPhiMVector phiP4 = posP4 + negP4;
+        ROOT::Math::PtEtaPhiMVector KPlusP4(postrack.pt(), postrack.eta(), postrack.phi(), kmass);
+        ROOT::Math::PtEtaPhiMVector KMinusP4(negtrack.pt(), negtrack.eta(), negtrack.phi(), kmass);
+        ROOT::Math::PtEtaPhiMVector phiP4 = KPlusP4 + KMinusP4;
         double phiInvMass = phiP4.M();
 
         // check if mass is close enough to phi mass
@@ -147,7 +149,7 @@ void DsMesonAnalyzer::analyze(const edm::Event& iEvent){
         // vertex must be valid
         if(!phivtx.isValid()) continue;
         // chi squared of fit must be small
-        if(phivtx.normalisedChiSquared()>15.) continue;
+        if(phivtx.normalisedChiSquared()>5.) continue;
         if(phivtx.normalisedChiSquared()<0.) continue;
         
         // loop over third track
@@ -163,11 +165,11 @@ void DsMesonAnalyzer::analyze(const edm::Event& iEvent){
             double trackvtxsepx = std::abs(tr3refpoint.x()-phivtx.position().x());
             double trackvtxsepy = std::abs(tr3refpoint.y()-phivtx.position().y());
             double trackvtxsepz = std::abs(tr3refpoint.z()-phivtx.position().z());
-            if( trackvtxsepx>0.5 || trackvtxsepy>0.5 || trackvtxsepz>0.5 ) continue;
+            if( trackvtxsepx>0.1 || trackvtxsepy>0.1 || trackvtxsepz>0.1 ) continue;
 
             // make invariant mass (under the assumption of pi mass for the third track)
-            ROOT::Math::PtEtaPhiMVector thirdP4(tr3.pt(), tr3.eta(), tr3.phi(), pimass);
-            ROOT::Math::PtEtaPhiMVector dsP4 = phiP4 + thirdP4;
+            ROOT::Math::PtEtaPhiMVector piP4(tr3.pt(), tr3.eta(), tr3.phi(), pimass);
+            ROOT::Math::PtEtaPhiMVector dsP4 = phiP4 + piP4;
             double dsInvMass = dsP4.M();
 
             // check if mass is close enough to Ds mass
@@ -192,6 +194,26 @@ void DsMesonAnalyzer::analyze(const edm::Event& iEvent){
             _DsMeson_PhiMeson_pt[_nDsMeson] = phiP4.pt();
             _DsMeson_PhiMeson_eta[_nDsMeson] = phiP4.eta();
             _DsMeson_PhiMeson_phi[_nDsMeson] = phiP4.phi();
+            _DsMeson_PhiMeson_massDiff[_nDsMeson] = dsP4.M() - phiP4.M();
+            _DsMeson_Pi_pt[_nDsMeson] = piP4.pt();
+            _DsMeson_Pi_eta[_nDsMeson] = piP4.eta();
+            _DsMeson_Pi_phi[_nDsMeson] = piP4.phi();
+            _DsMeson_KPlus_pt[_nDsMeson] = KPlusP4.pt();
+            _DsMeson_KPlus_eta[_nDsMeson] = KPlusP4.eta();
+            _DsMeson_KPlus_phi[_nDsMeson] = KPlusP4.phi();
+            _DsMeson_KMinus_pt[_nDsMeson] = KMinusP4.pt();
+            _DsMeson_KMinus_eta[_nDsMeson] = KMinusP4.eta();
+            _DsMeson_KMinus_phi[_nDsMeson] = KMinusP4.phi();
+            _DsMeson_tr1tr2_deltaR[_nDsMeson] = reco::deltaR(tr1, tr2);
+            _DsMeson_tr3phi_deltaR[_nDsMeson] = reco::deltaR(tr3, phiP4);
+            _DsMeson_phivtx_normchi2[_nDsMeson] = phivtx.normalisedChiSquared();
+            _DsMeson_dsvtx_normchi2[_nDsMeson] = dsvtx.normalisedChiSquared();
+            _DsMeson_tr1tr2_sepx[_nDsMeson] = twotracksepx;
+            _DsMeson_tr1tr2_sepy[_nDsMeson] = twotracksepy;
+            _DsMeson_tr1tr2_sepz[_nDsMeson] = twotracksepz;
+            _DsMeson_tr3phi_sepx[_nDsMeson] = trackvtxsepx;
+            _DsMeson_tr3phi_sepy[_nDsMeson] = trackvtxsepy;
+            _DsMeson_tr3phi_sepz[_nDsMeson] = trackvtxsepz;
 
             // check if this candidate can be matched to gen-level
             _DsMeson_hasFastGenMatch[_nDsMeson] = false;

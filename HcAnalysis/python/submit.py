@@ -23,6 +23,9 @@ if __name__=='__main__':
     cmssw_version = os.getenv('CMSSW_BASE')
     print('Found following CMSSW base:')
     print(f'  - {cmssw_version}')
+    if cmssw_version is None:
+        msg = 'CMSSW version not set. Do cmsenv.'
+        raise Exception(msg)
 
     # get proxy
     proxy = None
