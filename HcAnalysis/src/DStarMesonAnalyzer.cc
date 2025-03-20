@@ -132,15 +132,32 @@ void DStarMesonAnalyzer::analyze(const edm::Event& iEvent){
         } else continue; // should not normally happen but just for safety
 
         // make invariant mass
-        // (note: we can safely assume the negative track is a kaon, and the positive one a pion,
-        //  as the opposite case has a negligible branching fraction)
-        ROOT::Math::PtEtaPhiMVector pi2P4(postrack.pt(), postrack.eta(), postrack.phi(), pimass);
-        ROOT::Math::PtEtaPhiMVector KP4(negtrack.pt(), negtrack.eta(), negtrack.phi(), kmass);
-        ROOT::Math::PtEtaPhiMVector dzeroP4 = pi2P4 + KP4;
+        // (note: although the D0 meson decays preferentially to K- pi+ rather than K+ pi-,
+        //  still both possibilities must be considered since the original particle could
+        //  be an anti-D0, which decays preferentially to K+ pi-)
+        ROOT::Math::PtEtaPhiMVector piPlusP4(postrack.pt(), postrack.eta(), postrack.phi(), pimass);
+        ROOT::Math::PtEtaPhiMVector KMinusP4(negtrack.pt(), negtrack.eta(), negtrack.phi(), kmass);
+        ROOT::Math::PtEtaPhiMVector KPlusP4(postrack.pt(), postrack.eta(), postrack.phi(), kmass);
+        ROOT::Math::PtEtaPhiMVector piMinusP4(negtrack.pt(), negtrack.eta(), negtrack.phi(), pimass);
+        ROOT::Math::PtEtaPhiMVector dzeroP4 = piPlusP4 + KMinusP4;
+        ROOT::Math::PtEtaPhiMVector dzerobarP4 = piMinusP4 + KPlusP4;
         double dzeroInvMass = dzeroP4.M();
+        double dzerobarInvMass = dzerobarP4.M();
         
         // invariant mass must be close to resonance mass
-        if( std::abs(dzeroInvMass - dzeromass) > 0.035 ) continue;
+        ROOT::Math::PtEtaPhiMVector pi2P4(0, 0, 0, 0);
+        ROOT::Math::PtEtaPhiMVector KP4(0, 0, 0, 0);
+        if( (std::abs(dzeroInvMass - dzeromass) < 0.035)
+            && (std::abs(dzeroInvMass - dzeromass) < std::abs(dzerobarInvMass - dzeromass)) ){
+            pi2P4 = piPlusP4;
+            KP4 = KMinusP4;
+        } else if( (std::abs(dzerobarInvMass - dzeromass) < 0.035) 
+                   && (std::abs(dzerobarInvMass - dzeromass) < std::abs(dzeroInvMass - dzeromass)) ){
+            pi2P4 = piMinusP4;
+            KP4 = KPlusP4;
+            dzeroP4 = dzerobarP4;
+            dzeroInvMass = dzerobarInvMass;
+        } else continue;
 
         // fit a vertex
         std::vector<reco::TransientTrack> transpair;
