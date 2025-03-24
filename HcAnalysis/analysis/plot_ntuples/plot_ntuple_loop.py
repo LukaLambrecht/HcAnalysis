@@ -43,8 +43,8 @@ if __name__=='__main__':
       }
     }
 
-    inputfile = '../../python/output_test/output_test.root' # to replace with cmd line arg
-    outputdir = 'output_test' # to replace with cmd line arg
+    inputfile = sys.argv[1]
+    outputdir = sys.argv[2]
 
     for key, config in configs.items():
 
