@@ -14,8 +14,12 @@ process.load("Configuration.StandardSequences.GeometryRecoDB_cff")
 process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_cff")
 process.load('Configuration.StandardSequences.Reconstruction_cff')
 
-# parse input file
+# read command line args
 inputfile = sys.argv[1]
+nentries = sys.argv[2]
+outputfile = sys.argv[3]
+
+# parse input file
 if inputfile.startswith('root://'):
     pass
 elif inputfile.startswith('/store/'):
@@ -25,9 +29,13 @@ else:
     inputfile = f'file:{inputfile}'
 print(f'Using parsed input file name: {inputfile}')
 
+# parse number of entries to process
+# (note: use -1 to process all events in the input file)
+nentries = int(nentries)
+
 # set input file and number of events to process
 # (note: use -1 to process all events in the input file)
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(nentries) )
 process.source = cms.Source("PoolSource",
         fileNames = cms.untracked.vstring(inputfile)
 )
@@ -42,7 +50,6 @@ process.analyzer = cms.EDAnalyzer('HcAnalysis',
 )
 
 # set output file
-outputfile = sys.argv[2]
 process.TFileService = cms.Service("TFileService",
   fileName = cms.string(outputfile),
 )

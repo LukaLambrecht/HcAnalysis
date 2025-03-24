@@ -7,3 +7,6 @@
 
 # ignore user proxy
 **x509up*
+
+# ignore condor files
+**cjob_*
