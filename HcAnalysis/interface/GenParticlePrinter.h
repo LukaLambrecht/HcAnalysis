@@ -1,5 +1,6 @@
 /*
-Custom analyzer class for investigating gen-level Ds meson decays.
+Simple analyzer to print some gen particle info.
+For testing and debugging, not meant to be used in production.
 */
 
 #ifndef GEN_PARTICLE_PRINTER_H

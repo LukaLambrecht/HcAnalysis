@@ -22,8 +22,8 @@
   "variable": "DsMeson_PhiMeson_massDiff",
   "axtitle": "Reconstructed $m(D_{s}) - m(\\phi)$",
   "unit": "GeV",
-  "xlow": ,
-  "xhigh": ,
+  "xlow": 0.75,
+  "xhigh": 1.1,
   "nbins": 50
 }
 ]
