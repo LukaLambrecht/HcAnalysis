@@ -4,6 +4,9 @@ This repository contains an analyzer of H production in association with charmed
 Several types of charmed mesons (including the Ds and D\*) are reconstructed from pairs and triplets of individual tracks.
 The H boson is reconstructed from its decay into two photons or four charged leptons (TBD).
 
+WARNING: this ntuplizer will no longer be developed further!
+Instead, use the [custom NanoAOD producer](https://github.com/LukaLambrecht/HcNano) with equivalent functionality as this ntuplizer (at the time of writing), but with the more convenient output in NanoAOD format instead of custom ntuples.
+
 ### How to setup
 Download and run the installation script as follows:
 
